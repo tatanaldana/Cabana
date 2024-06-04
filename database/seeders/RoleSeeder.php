@@ -4,7 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RoleSeeder extends Seeder
 {
@@ -13,12 +14,19 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $rol= new Role();
-        $rol->nombre='Administrador';
-        $rol->save();
+        $admin = Role::create(['name' => 'admin']);
+        $cliente = Role::create(['name' => 'cliente']);
 
-        $rol1= new Role();
-        $rol1->nombre='Cliente';
-        $rol1->save();
+        $createGeneral = Permission::create(['name' => 'create general']);
+        $editGeneral = Permission::create(['name' => 'edit general']);
+        $deleteGeneral = Permission::create(['name' => 'delete general']);
+
+        
+
+
+        $admin->syncPermissions([$createGeneral,$editGeneral,$deleteGeneral]);
+        $cliente->syncPermissions();
+
+
     }
 }

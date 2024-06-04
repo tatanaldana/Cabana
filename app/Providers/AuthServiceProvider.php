@@ -5,6 +5,7 @@ namespace App\Providers;
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
+use App\Traits\Apitrait;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,14 +26,15 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
         Passport::tokensExpireIn(now()->addSecond(60));
         Passport::enablePasswordGrant();
-      /* Passport::tokensCan([
+        Passport::tokensCan([
          'create-categoria'=>'Crear nueva categoria',
          'delete-categoria'=>'Eliminar categoria',
-         'read-categoria'=>'mirar categoria',
+         'update-categoria'=>'Editar categoria',
+         'read-categoria'=>'Mirar categorias',
         ]);
 
-        Passport::setDefaultScope([
-            'read_post',
-        ]);*/
+       Passport::setDefaultScope([
+            'read-categoria'=>'Mirar categorias',
+        ]);
     }
 }

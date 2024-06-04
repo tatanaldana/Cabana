@@ -52,13 +52,13 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request,$doc)
+    public function update(UserRequest $request,$id)
     {
         try{
             $data['tel']=$request['tel'];
             $data['genero']=$request['genero'];
             $data['direccion']=$request['direccion'];
-            $users = User::find($doc);
+            $users = User::find($id);
             if(!$users || !$users->exists()) {
                 return response()->json(['error' => 'Usuario no encontrado'], 404);
             }

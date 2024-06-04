@@ -20,7 +20,7 @@ class LoginController extends Controller
         if(Hash::check($request->password,$user->password)){
             return UserResource::make($user);
         }else{
-            return response()->json(['message'=>'These credentials do not match our records',404]);
+            return response()->json(['message'=>'These credentials do not match our records',401]);
         }
 
     }

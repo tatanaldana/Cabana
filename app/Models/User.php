@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable,Apitrait;
+    use HasApiTokens, HasFactory, Notifiable,Apitrait,HasRoles;
 
     public $incrementing=false;
     protected $table='users';
@@ -67,9 +68,9 @@ class User extends Authenticatable
             return $this->hasMany(Venta::class);
         }
     
-        public function rol(){
+       /*public function role(){
             return $this->belongsTo(Role::class);
-        }
+        }*/
 
         public function image()
         {

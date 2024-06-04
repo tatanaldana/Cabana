@@ -6,66 +6,104 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\CategoriaRequest;
 use App\Http\Resources\CategoriaResource;
 use App\Models\Categoria;
-
+use Illuminate\Http\Response;
 
 class CategoriaController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']);
-       // $this->middleware('scopes:read-categoria')->only('index','show');
-        //$this->middleware('scopes:create-categoria')->only('store');
-        //$this->middleware('scopes:delete-categoria')->only('destroy');
+        $this->middleware(['scopes:read-categoria','can:create articles'])->only('index','show');
+        $this->middleware(['scopes:update-categoria','can:update articles'])->only('update');
+        $this->middleware(['scopes:create-categoria','can:create articles'])->only('store');
+        $this->middleware(['scopes:delete-categoria','can:delete articles'])->only('destroy');
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $categoria = Categoria::included()->sort()->filter()->getOrPaginate();
-        return CategoriaResource::collection($categoria);
+        try {
+            $this->authorize('viewAny', Categoria::class);
+            $categoria = Categoria::included()->sort()->filter()->getOrPaginate();
+            return CategoriaResource::collection($categoria);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Falla al obtener las categorias',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function show($id){
+        try{
+            $categoria=Categoria::where('id', $id)->get();
+            $this->authorize('view', $categoria);
+            if(!$categoria) {
+                return response()->json(['error' => 'Detalle de promocion no encontrado'], 404);
+            }
+            return response()->json($categoria, 200);
+        }catch(\Throwable $th){
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
 
     public function store(CategoriaRequest $request)
     {
-        $data=$request->validated();
-        $user=auth()->user();
-        $data['user_id']=$user->id;
-        $categoria=Categoria::create($data);
-        return CategoriaResource::make($categoria);
+        try {
+            $this->authorize('create', Categoria::class);
+            $data = $request->validated();
+            $user = auth()->user();
+            $data['user_id'] = $user->id;
+
+            $categoria = Categoria::create($data);
+
+            return response()->json([
+                'message' => 'Categoria created successfully',
+                'categoria' => new CategoriaResource($categoria)
+            ], Response::HTTP_CREATED);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to create categoria',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        $categoria=Categoria::included()->findOrFail($id);
-        return CategoriaResource::make($categoria);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(CategoriaRequest $request, Categoria $categoria)
     {
-        $data = $request->validated();
-        $categoria->update($data);
-        return CategoriaResource::make($categoria);
-    }
-    
+        try {
+            $this->authorize('update', $categoria);
+            $data = $request->validated();
+            $categoria->update($data);
 
-    /**
-     * Remove the specified resource from storage.
-     */
+            return response()->json([
+                'message' => 'Categoria actualizada exitosamente',
+                'categoria' => new CategoriaResource($categoria)
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al actualizar categoria',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function destroy(Categoria $categoria)
     {
-        $categoria->delete();
+        try {
+            $this->authorize('delete', $categoria);
+            $categoria->delete();
 
-        return CategoriaResource::make($categoria);
+            return response()->json([
+                'message' => 'Categoria eliminada de manera exitosa'
+            ], Response::HTTP_NO_CONTENT);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to delete categoria',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
+
