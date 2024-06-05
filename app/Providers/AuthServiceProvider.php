@@ -27,14 +27,10 @@ class AuthServiceProvider extends ServiceProvider
         Passport::tokensExpireIn(now()->addSecond(60));
         Passport::enablePasswordGrant();
         Passport::tokensCan([
-         'create-categoria'=>'Crear nueva categoria',
-         'delete-categoria'=>'Eliminar categoria',
-         'update-categoria'=>'Editar categoria',
-         'read-categoria'=>'Mirar categorias',
+            'admin' => 'Admin scope',
+            'cliente' => 'Cliente scope',
         ]);
 
-       Passport::setDefaultScope([
-            'read-categoria'=>'Mirar categorias',
-        ]);
+
     }
 }

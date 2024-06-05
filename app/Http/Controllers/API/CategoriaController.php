@@ -13,10 +13,9 @@ class CategoriaController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']);
-        $this->middleware(['scopes:read-categoria','can:create articles'])->only('index','show');
-        $this->middleware(['scopes:update-categoria','can:update articles'])->only('update');
-        $this->middleware(['scopes:create-categoria','can:create articles'])->only('store');
-        $this->middleware(['scopes:delete-categoria','can:delete articles'])->only('destroy');
+        $this->middleware(['scopes:update-registros','can:update general'])->only('update');
+        $this->middleware(['scopes:create-registros','can:create general'])->only('store');
+        $this->middleware(['scopes:delete-registros','can:delete general'])->only('destroy');
     }
     /**
      * Display a listing of the resource.

@@ -13,6 +13,8 @@ class DetventaController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api');
+        $this->middleware(['scopes:read-registros'])->only('index','show');
+        $this->middleware(['scopes:create-registros','can:create general'])->only('store');
     }
     /**
      * Display a listing of the resource.

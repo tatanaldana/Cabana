@@ -12,6 +12,10 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api');
+        $this->middleware(['scopes:read-registros'])->only('index','show');
+        $this->middleware(['scopes:update-registros','can:update general'])->only('update');
+        $this->middleware(['scopes:create-registros','can:create general'])->only('store');
+        $this->middleware(['scopes:delete-registros','can:delete general'])->only('destroy');
     }
     /**
      * Display a listing of the resource.
@@ -36,10 +40,10 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($doc)
+    public function show($id)
     {
         try{
-            $users=User::included()->find($doc);
+            $users=User::included()->find($id);
             if(!$users || !$users->exists()) {
                 return response()->json(['error' => 'Usuario no encontrado'], 404);
             }
@@ -72,9 +76,9 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($doc){
+    public function destroy($id){
         try{
-            $users=User::find($doc);
+            $users=User::find($id);
             if(!$users || !$users->exists()) {
                 return response()->json(['error' => 'Usuario no encontrado'], 404);
             }

@@ -11,18 +11,26 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    public function store(LoginRequest $request){
-       
+    public function store(LoginRequest $request)
+    {
         $request->validated();
 
         $user = User::where('email', $request->email)->firstOrFail();
 
-        if(Hash::check($request->password,$user->password)){
-            return UserResource::make($user);
-        }else{
-            return response()->json(['message'=>'These credentials do not match our records',401]);
+        if (Hash::check($request->password, $user->password)) {
+            // Cargar los roles del usuario
+            $user->load('roles');
+
+            // Obtener el nombre del rol asociado al usuario (si existe)
+            $roleName = $user->roles->isNotEmpty() ? $user->roles->first()->name : null;
+
+            // Devolver la respuesta con los datos del usuario y el nombre del rol
+            return response()->json([
+                'user' => new UserResource($user),
+                'role' => $roleName
+            ]);
+        } else {
+            return response()->json(['message' => 'These credentials do not match our records'], 401);
         }
-
     }
-
 }
