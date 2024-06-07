@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Traits\Apitrait;
+use App\Traits\Token;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,7 +14,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable,Apitrait,HasRoles;
+    use HasApiTokens, HasFactory, Notifiable,Apitrait,HasRoles,Token;
 
     public $incrementing=false;
     protected $table='users';
@@ -36,7 +37,6 @@ class User extends Authenticatable
         'fecha_naci',
         'genero',
         'direccion',
-        'role_id',
     ];
 
     /**

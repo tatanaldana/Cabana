@@ -29,7 +29,6 @@ class RegistroRequest extends FormRequest
             'fecha_naci'=>'required|date',
             'genero'=>'required|string|max:50',
             'direccion'=>'required|string|max:50',
-            'role_id'=>'required|string|max:50',
             'email'=>'required|email|unique:users,email|max:50',
             'password'=>'required|string|min:8|max:50|confirmed',
         ];

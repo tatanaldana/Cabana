@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'cabaña'=>[
+        'client_id'=>env('CABAÑA_CLIENT_ID'),
+        'client_secret'=>env('CABAÑA_CLIENT_SECRET'),
+    ]
+
 ];

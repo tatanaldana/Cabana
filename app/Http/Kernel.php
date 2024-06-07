@@ -68,6 +68,5 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'scope'=>CheckScopes::class,
         'scope'=>CheckForAnyScope::class,
-        'assign.scopes' => \App\Http\Middleware\AssignAccessTokenScopes::class,
     ];
 }

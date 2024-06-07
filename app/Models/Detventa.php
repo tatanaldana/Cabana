@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Apitrait;
+use App\Traits\Token;
 
 class Detventa extends Model
 {
-    use HasFactory,Apitrait;
+    use HasFactory,Apitrait,Token;
 
     protected $table='detventas';
 

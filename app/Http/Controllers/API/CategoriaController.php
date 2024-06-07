@@ -13,9 +13,9 @@ class CategoriaController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']);
-        $this->middleware(['scopes:update-registros','can:update general'])->only('update');
-        $this->middleware(['scopes:create-registros','can:create general'])->only('store');
-        $this->middleware(['scopes:delete-registros','can:delete general'])->only('destroy');
+        $this->middleware(['scope:admin','can:edit general'])->only('update');
+        $this->middleware(['scope:admin','can:create general'])->only('store');
+        $this->middleware(['scope:admin','can:delete general'])->only('destroy');
     }
     /**
      * Display a listing of the resource.
@@ -23,7 +23,6 @@ class CategoriaController extends Controller
     public function index()
     {
         try {
-            $this->authorize('viewAny', Categoria::class);
             $categoria = Categoria::included()->sort()->filter()->getOrPaginate();
             return CategoriaResource::collection($categoria);
         } catch (\Exception $e) {
@@ -37,7 +36,6 @@ class CategoriaController extends Controller
     public function show($id){
         try{
             $categoria=Categoria::where('id', $id)->get();
-            $this->authorize('view', $categoria);
             if(!$categoria) {
                 return response()->json(['error' => 'Detalle de promocion no encontrado'], 404);
             }
