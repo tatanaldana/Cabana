@@ -18,6 +18,8 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <!-- Sweetalert -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+       <!--Lodash-->   
+        <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
         
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>

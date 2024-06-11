@@ -37,7 +37,6 @@ Route::apiResource('pqrs',PqrController::class);
 Route::apiResource('productos',ProductoController::class);
 Route::apiResource('promociones',PromocioneController::class);
 Route::apiResource('proveedores',ProveedoreController::class);
-Route::apiResource('roles',RoleController::class);
 Route::apiResource('users',UserController::class);
 Route::apiResource('ventas',VentaController::class);
 

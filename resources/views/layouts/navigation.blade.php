@@ -41,7 +41,10 @@
                         <x-dropdown-link :href="route('clientes.index')">
                             Clientes
                         </x-dropdown-link>
-
+                        
+                        <x-dropdown-link :href="route('tokens.index')">
+                            API Tokens
+                        </x-dropdown-link>
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -87,6 +90,14 @@
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('clientes.index')">
+                    clientes
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('tokens.index')">
+                    Api Tokens
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->

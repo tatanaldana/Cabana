@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\Token;
 use App\Traits\Apitrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Venta extends Model
 {
-    use HasFactory,Apitrait;
+    use HasFactory,Apitrait,Token;
 
     protected $table='ventas';
 
