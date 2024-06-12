@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Categoria;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
@@ -38,8 +37,12 @@ class CategoriaPolicy
      */
     public function update(User $user)
     {
-        return $user->hasRole('admin') ? Response::allow()
-        : Response::deny('No tienes permiso para realizar esta accion.');
+        // Verificar si el usuario tiene el scope "admin" o el rol "admin"
+        if ($user->tokenCan('admin') || $user->hasRole('admin')) {
+            return Response::allow();
+        }
+        // Si la política falla, devuelve una respuesta denegada con un mensaje personalizado
+        return Response::deny('No tienes permiso para realizar esta acción.');
     }
 
     /**
@@ -47,8 +50,11 @@ class CategoriaPolicy
      */
     public function delete(User $user)
     {
-        return $user->hasRole('admin') ? Response::allow()
-        : Response::deny('No tienes permiso para realizar esta accion.');
+        if ($user->tokenCan('admin') || $user->hasRole('admin')) {
+            return Response::allow();
+        }
+
+        return Response::deny('No tienes permiso para realizar esta accion.');
     }
 
 

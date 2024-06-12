@@ -21,7 +21,7 @@ class LoginController extends Controller
 
         if (Hash::check($request->password, $user->password)) {
              // Generar el token de acceso con el scope adecuado
-             $token = $user->getAccessToken($request->email, $request->password);
+             $token = $user->getAccessToken($user, $request->password);
             // Cargar los roles del usuario
             $user->load('roles');
 
@@ -32,7 +32,7 @@ class LoginController extends Controller
             return response()->json([
                 'user' => new UserResource($user),
                 'token' =>new TokenResource($token),
-                'role' => $roleName,
+                'role' => $roleName,  
             ]);
         } else {
             return response()->json(['message' => 'These credentials do not match our records'], 401);

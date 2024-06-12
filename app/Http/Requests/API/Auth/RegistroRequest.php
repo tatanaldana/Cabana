@@ -26,7 +26,7 @@ class RegistroRequest extends FormRequest
             'name'=> 'required|string|max:50',
             'tipo_doc'=>'required|string|max:10',
             'tel'=>'required|string|max:11',
-            'fecha_naci'=>'required|date',
+            'fecha_naci'=>'required|date_format:d-m-Y',
             'genero'=>'required|string|max:50',
             'direccion'=>'required|string|max:50',
             'email'=>'required|email|unique:users,email|max:50',

@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TokenResource extends JsonResource
@@ -10,12 +9,14 @@ class TokenResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @return array<string, mixed>
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
      */
-    public function toArray(Request $request): array
+    public function toArray($request)
     {
         return [
-            'access_token' => $this->resource->access_token, 
+            'access_token' => $this->access_token,
+            'autorizacion' =>$this->scopes,
         ];
     }
 }
