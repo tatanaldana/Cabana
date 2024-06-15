@@ -11,13 +11,14 @@ trait Token{
 
     public function getAccessToken(User $user, $password){
 
-        $url = env('APP_URL') . '/oauth/token';
+        $url = 'http://arcaweb.test/oauth/token';
+
+        logger("URL de solicitud de token: $url");
     
         $scopes = $user->hasRole('admin') ? 'admin' : 'cliente';
     
-        $response = Http::withHeaders([
-            'Accept' => 'application/json'
-        ])->post($url, [
+
+        $response = Http::asForm()->post($url, [
             'grant_type' => 'password',
             'client_id' => config('services.cabaña.client_id'),
             'client_secret' => config('services.cabaña.client_secret'),
@@ -26,9 +27,8 @@ trait Token{
             'scopes' => $scopes,
         ]);
 
-        dd([config('services.cabaña.client_secret'),config('services.cabaña.client_id')]);
-    
-    
+        //dd(config('services.cabaña.client_id'),config('services.cabaña.client_secret'));
+
         if ($response->successful()) {
             // Obtén el token de acceso como objeto JSON
             $token = $response->object();

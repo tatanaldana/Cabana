@@ -31,6 +31,10 @@ class AuthServiceProvider extends ServiceProvider
             'cliente' => 'Access limited resources',
         ]);
 
+        Passport::setDefaultScope([
+            'admin',
+            'cliente',
+        ]);
 
     }
 }

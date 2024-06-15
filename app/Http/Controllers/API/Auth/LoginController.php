@@ -32,7 +32,8 @@ class LoginController extends Controller
             return response()->json([
                 'user' => new UserResource($user),
                 'token' =>new TokenResource($token),
-                'role' => $roleName,  
+                'role' => $roleName,
+  
             ]);
         } else {
             return response()->json(['message' => 'These credentials do not match our records'], 401);
