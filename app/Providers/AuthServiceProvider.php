@@ -27,10 +27,14 @@ class AuthServiceProvider extends ServiceProvider
         Passport::tokensExpireIn(now()->addSecond(60));
         Passport::enablePasswordGrant();
         Passport::tokensCan([
-            'admin' => 'Admin scope',
-            'cliente' => 'Cliente scope',
+            'admin' => 'Access all resources',
+            'cliente' => 'Access limited resources',
         ]);
 
+        Passport::setDefaultScope([
+            'admin',
+            'cliente',
+        ]);
 
     }
 }

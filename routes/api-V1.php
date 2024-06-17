@@ -10,7 +10,6 @@ use App\Http\Controllers\API\PqrController;
 use App\Http\Controllers\API\ProductoController;
 use App\Http\Controllers\API\PromocioneController;
 use App\Http\Controllers\API\ProveedoreController;
-use App\Http\Controllers\API\RoleController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VentaController;
 use App\Http\Controllers\ClienteController;
@@ -28,8 +27,9 @@ use Illuminate\Support\Facades\Route;
 */
 Route::post('login',[LoginController::class,'store']);
 Route::post('registro',[RegistroController::class,'store']);
-
 Route::apiResource('categorias',CategoriaController::class);
+Route::middleware('auth:api')->group(function () {
+
 Route::apiResource('detpromociones',DetpromocioneController::class);
 Route::apiResource('detventas',DetventaController::class);
 Route::apiResource('matprimas',MatprimaController::class);
@@ -39,6 +39,7 @@ Route::apiResource('promociones',PromocioneController::class);
 Route::apiResource('proveedores',ProveedoreController::class);
 Route::apiResource('users',UserController::class);
 Route::apiResource('ventas',VentaController::class);
+});
 
 
 /*

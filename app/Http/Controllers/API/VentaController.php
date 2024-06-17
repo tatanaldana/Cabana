@@ -41,6 +41,7 @@ class VentaController extends Controller
             $data['total']=$request['total'];
             $data['users_doc']=$request['users_doc'];
             $ventas=Venta::create($data);
+            
             return response()->json(['message' => 'Registro creado exitosamente', 'data' => $ventas], 201);
         }catch(\Throwable $th){
             return response()->json(['error'=>$th->getMessage()],500);
