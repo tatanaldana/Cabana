@@ -12,8 +12,6 @@ trait Token{
     public function getAccessToken(User $user, $password){
 
         $url = 'http://arcaweb.test/oauth/token';
-
-        logger("URL de solicitud de token: $url");
     
         $scopes = $user->hasRole('admin') ? 'admin' : 'cliente';
     
@@ -27,14 +25,10 @@ trait Token{
             'scopes' => $scopes,
         ]);
 
-        //dd(config('services.cabaña.client_id'),config('services.cabaña.client_secret'));
-
         if ($response->successful()) {
             // Obtén el token de acceso como objeto JSON
             $token = $response->object();
-
             $token->scopes = $scopes;
-
             // Devuelve el token de acceso
             return $token; 
         } else {
