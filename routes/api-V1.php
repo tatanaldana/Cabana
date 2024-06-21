@@ -28,18 +28,16 @@ use Illuminate\Support\Facades\Route;
 Route::post('login',[LoginController::class,'store']);
 Route::post('registro',[RegistroController::class,'store']);
 Route::apiResource('categorias',CategoriaController::class);
-Route::middleware('auth:api')->group(function () {
-
+Route::apiResource('productos',ProductoController::class);
 Route::apiResource('detpromociones',DetpromocioneController::class);
 Route::apiResource('detventas',DetventaController::class);
 Route::apiResource('matprimas',MatprimaController::class);
 Route::apiResource('pqrs',PqrController::class);
-Route::apiResource('productos',ProductoController::class);
 Route::apiResource('promociones',PromocioneController::class);
 Route::apiResource('proveedores',ProveedoreController::class);
 Route::apiResource('users',UserController::class);
 Route::apiResource('ventas',VentaController::class);
-});
+
 
 
 /*

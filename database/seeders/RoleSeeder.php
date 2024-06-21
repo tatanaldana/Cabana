@@ -17,6 +17,8 @@ class RoleSeeder extends Seeder
         $admin = Role::create(['name' => 'admin']);
         $cliente = Role::create(['name' => 'cliente']);
 
+        
+
         $createGeneral = Permission::create(['name' => 'create general']);
         $editGeneral = Permission::create(['name' => 'edit general']);
         $deleteGeneral = Permission::create(['name' => 'delete general']);

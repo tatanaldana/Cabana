@@ -8,7 +8,7 @@ use App\Models\Matprima;
 use Illuminate\Http\Request;
 
 class MatprimaController extends Controller
-{
+{/*
     public function __construct()
     {
             $this->middleware('auth:api');

@@ -39,9 +39,9 @@ class UserRequest extends FormRequest
 
             case 'update':
         return [
-            'telefono'=>'required|string|max:10',
+            'tel'=>'required|string|max:10',
             'direccion'=>'required|string|max:50',
-            'genero'=>'required|string|max:50'
+         //   'genero'=>'required|string|max:50'
         ];
 
             default:

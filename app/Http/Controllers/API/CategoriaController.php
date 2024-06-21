@@ -10,14 +10,12 @@ use Illuminate\Http\Response;
 
 class CategoriaController extends Controller
 {
-    public function __construct()
+   /* public function __construct()
     {
-       /* $this->middleware('auth:api')->except(['index','show']);
-        /*
+        $this->middleware('auth:api')->except(['index','show']);
         $this->middleware(['scope:admin','can:edit general'])->only('update');
         $this->middleware(['scope:admin','can:create general'])->only('store');
         $this->middleware(['scope:admin','can:delete general'])->only('destroy');
-        */
     }
     /**
      * Display a listing of the resource.

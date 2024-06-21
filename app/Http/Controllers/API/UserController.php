@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function __construct()
+    /*public function __construct()
     {
         $this->middleware('auth:api');
         $this->middleware(['scopes:read-registros'])->only('index','show');
@@ -59,6 +59,7 @@ class UserController extends Controller
     public function update(UserRequest $request,$id)
     {
         try{
+            $this->authorize('update', User::class);
             $data['tel']=$request['tel'];
             $data['genero']=$request['genero'];
             $data['direccion']=$request['direccion'];

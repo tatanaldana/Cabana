@@ -8,7 +8,7 @@ use App\Models\Pqr;
 use Illuminate\Http\Request;
 
 class PqrController extends Controller
-{
+{/*
     public function __construct()
     {
         $this->middleware('auth:api');

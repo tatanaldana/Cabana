@@ -8,7 +8,7 @@ use App\Models\Venta;
 use Illuminate\Http\Request;
 
 class VentaController extends Controller
-{
+{/*
     public function __construct()
     {
         $this->middleware('auth:api');

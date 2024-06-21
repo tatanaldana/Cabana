@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 
 class PromocioneController extends Controller
 {
-
+/*
     public function __construct()
-    {
+    {/*
         $this->middleware('auth:api')->except(['index','show']);
         $this->middleware(['scopes:read-registros'])->only('index','show');
         $this->middleware(['scopes:update-registros','can:update general'])->only('update');

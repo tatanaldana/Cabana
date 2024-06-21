@@ -8,7 +8,7 @@ use App\Models\Proveedore;
 use Illuminate\Http\Request;
 
 class ProveedoreController extends Controller
-{
+{/*
     public function __construct()
     {
         $this->middleware('auth:api');

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Traits\Apitrait;
 use App\Traits\Token;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -8,7 +8,7 @@ use App\Models\Producto;
 use Illuminate\Http\Request;
 
 class ProductoController extends Controller
-{
+{/*
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']);
