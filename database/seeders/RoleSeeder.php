@@ -18,18 +18,19 @@ class RoleSeeder extends Seeder
         $cliente = Role::create(['name' => 'cliente']);
 
         
-
+        $viewGeneral = Permission::create(['name' => 'view general']);
         $createGeneral = Permission::create(['name' => 'create general']);
         $editGeneral = Permission::create(['name' => 'edit general']);
         $deleteGeneral = Permission::create(['name' => 'delete general']);
 
+        $viewCliente = Permission::create(['name' => 'ver personal cliente']);
         $createCliente = Permission::create(['name' => 'registro parcial']);
         $editCliente = Permission::create(['name' => 'edicion parcial']);
         $deleteCliente = Permission::create(['name' => 'Eliminacion parcial']);
 
 
-        $admin->syncPermissions([$createGeneral,$editGeneral,$deleteGeneral]);
-        $cliente->syncPermissions([$createCliente,$editCliente,$deleteCliente]);
+        $admin->syncPermissions([$createGeneral,$editGeneral,$deleteGeneral,$viewGeneral]);
+        $cliente->syncPermissions([$createCliente,$editCliente,$deleteCliente,$viewCliente]);
 
 
     }

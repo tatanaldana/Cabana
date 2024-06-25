@@ -27,6 +27,8 @@ use Illuminate\Support\Facades\Route;
 */
 Route::post('login',[LoginController::class,'store']);
 Route::post('registro',[RegistroController::class,'store']);
+
+
 Route::apiResource('categorias',CategoriaController::class);
 Route::apiResource('productos',ProductoController::class);
 Route::apiResource('detpromociones',DetpromocioneController::class);

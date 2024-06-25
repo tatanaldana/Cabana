@@ -22,9 +22,10 @@ trait Token{
             'client_secret' => config('services.cabaña.client_secret'),
             'username' => $user->email,
             'password' => $password,
-            'scopes' => $scopes,
+            'scope' => $scopes,
         ]);
-
+/*dd( config('services.cabaña.client_id'),
+config('services.cabaña.client_secret'));*/
         if ($response->successful()) {
             // Obtén el token de acceso como objeto JSON
             $token = $response->object();
@@ -37,6 +38,9 @@ trait Token{
     }
 
     public function resolveAuthorization(User $user) {
+
+        $url = 'http://arcaweb.test/oauth/token';
+
         $accessToken = $user->tokens()->where('name', 'access_token')->first();
     
         if ($accessToken && $accessToken->expires_at->isPast()) {
@@ -44,7 +48,7 @@ trait Token{
     
             $response = Http::withHeaders([
                 'Accept' => 'application/json'
-            ])->post('http://arcaweb.test/oauth/token', [
+            ])->post($url, [
                 'grant_type' => 'refresh_token',
                 'refresh_token' => $accessToken->refresh_token,
                 'client_id' => config('services.cabaña.client_id'),

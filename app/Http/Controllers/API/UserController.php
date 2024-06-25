@@ -5,50 +5,69 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\UserRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class UserController extends Controller
 {
-    /*public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api');
-        $this->middleware(['scopes:read-registros'])->only('index','show');
-        $this->middleware(['scopes:update-registros','can:update general'])->only('update');
-        $this->middleware(['scopes:create-registros','can:create general'])->only('store');
-        $this->middleware(['scopes:delete-registros','can:delete general'])->only('destroy');
+        $this->middleware(['scope:admin','can:view general'])->only('index','show');
+        $this->middleware(['scope:cliente','can:view cliente'])->only('show');
+        $this->middleware(['scopes:admin','can:update general'])->only('update');
+        $this->middleware(['scopes:cliente','can:update parcial'])->only('update');
+        $this->middleware(['scopes:admin','can:delete general'])->only('destroy');
+        $this->middleware(['scopes:cliente','can:Eliminacion parcial'])->only('destroy');
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        try{
-            $data=User::all();
-            return response()->json($data,200);
-        }catch(\Throwable $th){
-            return response()->json(['error'=>$th->getMessage()],500);
+        try {
+            $this->authorize('viewAny', User::class);
+
+            $users = User::all();
+
+            return response()->json($users, 200);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
         }
     }
 
-    public function store(UserRequest $request){
-        $data=$request->validated();
-        $user=User::create($data);
-        /*return UserResource::make($categoria);*/
-        return $user;
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(UserRequest $request)
+    {
+        try {
+            $this->authorize('create', User::class);
 
+            $data = $request->validated();
+            $user = User::create($data);
+
+            return response()->json($user, 201);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
     }
+
     /**
      * Display the specified resource.
      */
     public function show($id)
     {
-        try{
-            $users=User::included()->find($id);
-            if(!$users || !$users->exists()) {
+        try {
+            $user = User::find($id);
+
+            if (!$user) {
                 return response()->json(['error' => 'Usuario no encontrado'], 404);
             }
-            return response()->json($users, 200);
-        }catch(\Throwable $th){
+
+            $this->authorize('view', $user);
+
+            return response()->json($user, 200);
+        } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
@@ -56,20 +75,22 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request,$id)
+    public function update(UserRequest $request, $id)
     {
-        try{
-            $this->authorize('update', User::class);
-            $data['tel']=$request['tel'];
-            $data['genero']=$request['genero'];
-            $data['direccion']=$request['direccion'];
-            $users = User::find($id);
-            if(!$users || !$users->exists()) {
+        try {
+            $user = User::find($id);
+
+            if (!$user) {
                 return response()->json(['error' => 'Usuario no encontrado'], 404);
             }
-            $users->update($data);
-            return response()->json(['message' => 'Actualización exitosa', 'data' => $users], 200);
-        }catch(\Throwable $th){
+
+            $this->authorize('update', $user);
+
+            $data = $request->validated();
+            $user->update($data);
+
+            return response()->json(['message' => 'Actualización exitosa', 'data' => $user], 200);
+        } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
@@ -77,15 +98,21 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id){
-        try{
-            $users=User::find($id);
-            if(!$users || !$users->exists()) {
+    public function destroy($id)
+    {
+        try {
+            $user = User::find($id);
+
+            if (!$user) {
                 return response()->json(['error' => 'Usuario no encontrado'], 404);
             }
-            $users->delete();
+
+            $this->authorize('delete', $user);
+
+            $user->delete();
+
             return response()->json(['message' => 'Eliminación exitosa'], 200);
-        }catch(\Throwable $th){
+        } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }

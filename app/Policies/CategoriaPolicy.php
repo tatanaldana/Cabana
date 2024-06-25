@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Categoria;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
@@ -26,35 +27,25 @@ class CategoriaPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user)
+    public function create(User $user): Response
     {
-        return $user->hasRole('admin') ? Response::allow()
-        : Response::deny('No tienes permiso para ver esta categoría.');
+        return $user->hasRole('admin')
+            ? Response::allow()
+            : Response::deny('No tienes permiso para crear este producto.');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user)
+    public function update(User $user, Categoria $categoria): Response
     {
-        // Verificar si el usuario tiene el scope "admin" o el rol "admin"
-        if ($user->tokenCan('admin') || $user->hasRole('admin')) {
-            return Response::allow();
-        }
-        // Si la política falla, devuelve una respuesta denegada con un mensaje personalizado
-        return Response::deny('No tienes permiso para realizar esta acción.');
+        return $user->hasRole('admin') 
+            ? Response::allow()
+            : Response::deny('No tienes permiso para actualizar este producto.');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user)
+    public function delete(User $user, Categoria $categoria): Response
     {
-        if ($user->tokenCan('admin') || $user->hasRole('admin')) {
-            return Response::allow();
-        }
-
-        return Response::deny('No tienes permiso para realizar esta accion.');
+        return $user->hasRole('admin')
+            ? Response::allow()
+            : Response::deny('No tienes permiso para eliminar este producto.');
     }
 
 

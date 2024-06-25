@@ -6,16 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\ProductoRequest;
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class ProductoController extends Controller
-{/*
+{
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['index','show']);
-        $this->middleware(['scopes:read-registros'])->only('index','show');
-        $this->middleware(['scopes:update-registros','can:update general'])->only('update');
-        $this->middleware(['scopes:create-registros','can:create general'])->only('store');
-        $this->middleware(['scopes:delete-registros','can:delete general'])->only('destroy');
+        $this->middleware('auth:api')->except(['index', 'show']);
+        $this->middleware(['scope:admin', 'can:edit general'])->only('update');
+        $this->middleware(['scope:admin', 'can:create general'])->only('store');
+        $this->middleware(['scope:admin', 'can:delete general'])->only('destroy');
     }
 
     /**
@@ -23,11 +25,14 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        try{
-            $data=Producto::all();
-            return response()->json($data,200);
-        }catch(\Throwable $th){
-            return response()->json(['error'=>$th->getMessage()],500);
+        try {
+            $productos = Producto::all();
+            return response()->json($productos, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Falla al obtener los productos',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -36,16 +41,24 @@ class ProductoController extends Controller
      */
     public function store(ProductoRequest $request)
     {
-        try{
-            $data['nom_producto']=$request['nom_producto'];
-            $data['precio_producto']=$request['precio_producto'];
-            $data['detalle']=$request['detalle'];
-            $data['codigo']=$request['codigo'];
-            $data['categorias_id']=$request['categorias_id'];
-            $productos=Producto::create($data);
-            return response()->json(['message' => 'Registro creado exitosamente', 'data' => $productos], 201);
-        }catch(\Throwable $th){
-            return response()->json(['error'=>$th->getMessage()],500);
+        try {
+            $this->authorize('create', Producto::class);
+
+            $data = $request->validated();
+            $data['categoria_id'] = $request->categorias_id;
+            $producto = Producto::create($data);
+
+            return response()->json([
+                'message' => 'Producto creado exitosamente',
+                'producto' => $producto
+            ], Response::HTTP_CREATED);
+        } catch (AuthorizationException $e) {
+            return response()->json([
+                'error' => 'No tienes permiso para crear este producto.',
+                'message' => $e->getMessage()
+            ], Response::HTTP_FORBIDDEN);
+        } catch (\Exception $e) {
+            return app(\App\Exceptions\Handler::class)->render(request(), $e);
         }
     }
 
@@ -54,48 +67,63 @@ class ProductoController extends Controller
      */
     public function show($id)
     {
-        try{
-            $productos=Producto::included()->find($id);
-            if(!$productos) {
-                return response()->json(['error' => 'Producto no encontrado'], 404);
-            }
-            return response()->json($productos, 200);
-        }catch(\Throwable $th){
-            return response()->json(['error' => $th->getMessage()], 500);
+        try {
+            $producto = Producto::findOrFail($id);
+
+            return response()->json($producto, 200);
+        } catch (\Exception $e) {
+            return app(\App\Exceptions\Handler::class)->render(request(), $e);
         }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductoRequest $request, $id){
-        try{
-            $data['nom_producto']=$request['nom_producto'];
-            $data['precio_producto']=$request['precio_producto'];
-            $data['detalle']=$request['detalle'];
-            $data['codigo']=$request['codigo'];
-            $productos = Producto::find($id);
-            if(!$productos) {
-                return response()->json(['error' => 'Producto no encontrado'], 404);
-            }
-            $productos->update($data);
-            return response()->json(['message' => 'Actualización exitosa', 'data' => $productos], 200);
-        }catch(\Throwable $th){
-            return response()->json(['error' => $th->getMessage()], 500);
+    public function update(ProductoRequest $request, $id)
+    {
+        try {
+            $producto = Producto::findOrFail($id);
+
+            $this->authorize('update', $producto);
+
+            $data = $request->validated();
+            $producto->update($data);
+
+            return response()->json([
+                'message' => 'Producto actualizado exitosamente',
+                'producto' => $producto
+            ], Response::HTTP_OK);
+        } catch (AuthorizationException $e) {
+            return response()->json([
+                'error' => 'No tienes permiso para actualizar este producto.',
+                'message' => $e->getMessage()
+            ], Response::HTTP_FORBIDDEN);
+        } catch (\Exception $e) {
+            return app(\App\Exceptions\Handler::class)->render(request(), $e);
         }
     }
 
-    public function destroy($id){
-        try{
-            $productos=Producto::find($id);
-            if(!$productos) {
-                return response()->json(['error' => 'Producto no encontrado'], 404);
-            }
-            $productos->delete();
-            return response()->json(['message' => 'Eliminación exitosa'], 200);
-        }catch(\Throwable $th){
-            return response()->json(['error' => $th->getMessage()], 500);
-        }
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+        try {
+            $producto = Producto::findOrFail($id);
 
+            $this->authorize('delete', $producto);
+
+            $producto->delete();
+
+            return response()->json(['message' => 'Producto eliminado exitosamente'], Response::HTTP_OK);
+        } catch (AuthorizationException $e) {
+            return response()->json([
+                'error' => 'No tienes permiso para eliminar este producto.',
+                'message' => $e->getMessage()
+            ], Response::HTTP_FORBIDDEN);
+        } catch (\Exception $e) {
+            return app(\App\Exceptions\Handler::class)->render(request(), $e);
+        }
     }
 }
+

@@ -27,9 +27,9 @@ class ProductoRequest extends FormRequest
                 return [
                     'nom_producto' => 'required|string|max:50',
                     'precio_producto' => 'required|integer',
-                    'detalle' => 'required|integer',
+                    'detalle' => 'required|string',
                     'codigo' => 'required|string|max:10',
-                    'categoria_id' => 'required|integer|exists:catgorias,id'
+                    'categoria_id' => 'required|integer|exists:categorias,id'
                 ];
 
             case 'update':
