@@ -17,8 +17,8 @@ return new class extends Migration
             $table->boolean('estado')->default(false);   
             $table->integer('total')->nullable();  
             $table->timestamps(); 
-            $table->bigInteger('user_id')->unsigned();
-           // $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');*/
+            $table->BigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
         });
     }
 

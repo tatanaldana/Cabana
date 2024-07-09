@@ -20,7 +20,7 @@ class Venta extends Model
         'metodo_pago',
         'estado',
         'total',
-        'users_doc',
+        'user_id',
     ];
 
     public function user()

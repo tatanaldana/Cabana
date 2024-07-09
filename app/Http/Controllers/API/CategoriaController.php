@@ -117,7 +117,7 @@ class CategoriaController extends Controller
 
             return response()->json([
                 'message' => 'Categoria eliminada de manera exitosa'
-            ], Response::HTTP_NO_CONTENT);
+            ], Response::HTTP_OK);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Falla al eliminar la categoría',

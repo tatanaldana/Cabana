@@ -20,7 +20,7 @@ class Detventa extends Model
         'pre_producto',
         'cantidad',
         'subtotal',
-        'ventas_id',
+        'venta_id',
     ];
 
     public function venta()

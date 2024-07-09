@@ -20,7 +20,7 @@ class Producto extends Model
         'precio_producto',
         'detalle',
         'codigo',
-        'categorias_id',
+        'categoria_id',
     ];
 
     public function categoria(){

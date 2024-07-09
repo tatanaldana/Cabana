@@ -26,8 +26,8 @@ class VentaRequest extends FormRequest
                 return [
                     'metodo_pago' => 'required|string|max:20',
                     'estado' => 'required|boolean',
-                    'total' => 'required|integer|notnull:ventas,total',
-                    'user_id' => 'required|integer',
+                    'total' => 'required|integer|not_in:0',
+                    'user_id' => 'required|integer|exists:users,id',
                 ];
 
             case 'update':

@@ -16,6 +16,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable,Apitrait,HasRoles,Token;
 
     public $incrementing=false;
+    protected $primaryKey = 'id'; 
     protected $table='users';
 
     protected $allowincluded=['ventas','pqrs','ventas.detventas'];

@@ -36,12 +36,8 @@ class VentaController extends Controller
     public function store(VentaRequest $request)
     {
         try{
-            $data['metodo_pago']=$request['metodo_pago'];
-            $data['estado']=$request['estado'];
-            $data['total']=$request['total'];
-            $data['users_doc']=$request['users_doc'];
+            $data = $request->validated();
             $ventas=Venta::create($data);
-            
             return response()->json(['message' => 'Registro creado exitosamente', 'data' => $ventas], 201);
         }catch(\Throwable $th){
             return response()->json(['error'=>$th->getMessage()],500);
@@ -69,7 +65,7 @@ class VentaController extends Controller
      */
     public function update(VentaRequest $request,$id){
         try{
-            $data['estado']=$request['estado'];
+            $data = $request->validated();
             $ventas = Venta::find($id);
             if(!$ventas) {
                 return response()->json(['error' => 'Venta no encontrada'], 404);

@@ -20,7 +20,7 @@ class Pqr extends Model
         'sugerencia',
         'tipo_suge',
         'estado',
-        'users_doc',
+        'user_id',
     ];
 
     public function user()

@@ -22,11 +22,11 @@ class DetventaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            '*.nom_producto'=>'required|string|max:50',
-            '*.pre_producto'=>'required|integer',
-            '*.cantidad'=>'required|integer',
-            '*.subtotal'=>'required|integer',
-            '*.venta_id'=>'required|integer|exists:ventas,id'
+            'detalles.*.nom_producto'=>'required|string|max:50|exists:productos,nom_producto',
+            'detalles.*.pre_producto'=>'required|integer',
+            'detalles.*.cantidad'=>'required|integer',
+            'detalles.*.subtotal'=>'required|integer',
+            'detalles.*.venta_id'=>'required|integer|exists:ventas,id'
         ];
     }
 }

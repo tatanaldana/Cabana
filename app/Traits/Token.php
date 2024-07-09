@@ -16,7 +16,7 @@ trait Token{
         $scopes = $user->hasRole('admin') ? 'admin' : 'cliente';
     
 
-        $response = Http::asForm()->post($url, [
+        $response = Http::timeout(6000)->post($url, [
             'grant_type' => 'password',
             'client_id' => config('services.cabaña.client_id'),
             'client_secret' => config('services.cabaña.client_secret'),

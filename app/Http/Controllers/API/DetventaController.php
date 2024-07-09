@@ -24,6 +24,7 @@ class DetventaController extends Controller
         try{
             $detventas = Detventa::included()->sort()->filter()->getOrPaginate();
             return DetventaResource::collection($detventas);
+            
         }catch(\Throwable $th){
             return response()->json(['error'=>$th->getMessage()],500);
         }
@@ -34,12 +35,31 @@ class DetventaController extends Controller
      */
     public function store(DetventaRequest $request)
     {
-        $data=$request->validated();
-        $user=auth()->user();
-        $data['user_id']=$user->id;
-        $categoria=Detventa::create($data);
-        return DetventaResource::make($categoria);
+        try {
+            $detalles = $request->validated()['detalles'];
+            $detventas = [];
+
+                foreach ($detalles as $detalle) {
+                    $detventa = Detventa::create([
+                        'nom_producto' => $detalle['nom_producto'],
+                        'pre_producto' => $detalle['pre_producto'],
+                        'cantidad' => $detalle['cantidad'],
+                        'subtotal' => $detalle['subtotal'],
+                        'venta_id' => $detalle['venta_id'],
+                    ]);
+
+                    $detventas[] = $detventa; // Opcional: Guardar cada instancia en un arreglo para respuesta posterior
+            }
+
+            return response()->json(['message' => 'Registros creados exitosamente', 'data' => $detventas], 201);
+            // Si estás utilizando recursos, puedes retornar el recurso de Detventa
+            // return DetventaResource::collection($detventas);
+
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
     }
+
     /**
      * Display the specified resource.
      */
