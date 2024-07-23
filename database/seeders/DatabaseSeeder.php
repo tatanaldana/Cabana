@@ -23,22 +23,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Storage::deleteDirectory('image');
-        Storage::makeDirectory('image');
+        //Storage::deleteDirectory('image');
+        //Storage::makeDirectory('image');
 
         $this->call(RoleSeeder::class);
-        // $this->call(UsuarioSeeder::class);
+        $this->call(UserSeeder::class);
          $this->call(CategoriaSeeder::class);
-         /*$this->call(ProductoSeeder::class);
+         $this->call(ProductoSeeder::class);
          $this->call(VentaSeeder::class);
          $this->call(DetventaSeeder::class);
          $this->call(PromocioneSeeder::class);
          $this->call(DetpromocioneSeeder::class);
          $this->call(PqrSeeder::class);
          $this->call(MatprimaSeeder::class);
-         $this->call(ProveedoreSeeder::class); */
+         $this->call(ProveedoreSeeder::class); 
  
-         User::Factory(10)->create()->each(function (User $user){
+    /*     User::Factory(10)->create()->each(function (User $user){
             Image::factory(1)->create([
                 'imageable_id'=>$user->id,
                 'imageable_type'=>User::class
@@ -62,7 +62,7 @@ class DatabaseSeeder extends Seeder
          Pqr::factory(10)->create();
          Matprima::factory(10)->create();
          Proveedore::factory(10)->create();
-         
+         */
          // User::factory(10)->create();;
         // \App\Models\User::factory(10)->create();
 

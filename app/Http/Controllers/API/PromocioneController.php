@@ -37,9 +37,7 @@ class PromocioneController extends Controller
     public function store(PromocioneRequest $request)
     {
         try{
-            $data['nom_promo']=$request['nom_promo'];
-            $data['total_promo']=$request['total_promo'];
-            $data['categorias_id']=$request['categorias_id'];
+            $data = $request->validated();
             $promociones=Promocione::create($data);
             return response()->json(['message' => 'Registro creado exitosamente', 'data' => $promociones], 201);
         }catch(\Throwable $th){

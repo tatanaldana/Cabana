@@ -12,13 +12,13 @@ use Illuminate\Auth\Access\AuthorizationException;
 
 class CategoriaController extends Controller
 {
-    public function __construct()
+   /*public function __construct()
     {
         $this->middleware('auth:api')->except(['index', 'show']);
         $this->middleware(['scope:admin', 'can:edit general'])->only('update');
         $this->middleware(['scope:admin', 'can:create general'])->only('store');
         $this->middleware(['scope:admin', 'can:delete general'])->only('destroy');
-    }
+    }*/
 
     /**
      * Display a listing of the resource.
@@ -44,6 +44,7 @@ class CategoriaController extends Controller
         try {
             $categoria = Categoria::included()->findOrFail($id);
             return new CategoriaResource($categoria);
+
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Falla al obtener la categoria',
@@ -58,10 +59,10 @@ class CategoriaController extends Controller
     public function store(CategoriaRequest $request)
     {
         try {
-            $this->authorize('create', Categoria::class);
+           // $this->authorize('create', Categoria::class);
 
             $data = $request->validated();
-            $data['user_id'] = Auth::id(); // Obtener el ID del usuario autenticado
+          //  $data['user_id'] = Auth::id(); // Obtener el ID del usuario autenticado
 
             $categoria = Categoria::create($data);
 

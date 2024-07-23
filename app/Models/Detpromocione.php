@@ -18,8 +18,8 @@ class Detpromocione extends Model
         'cantidad',
         'descuento',
         'subtotal',
-        'promociones_id',
-        'productos_id',
+        'promocione_id',
+        'producto_id',
     ];
 
     public function promocione(){

@@ -12,13 +12,13 @@ use Illuminate\Auth\Access\AuthorizationException;
 
 class ProductoController extends Controller
 {
-    public function __construct()
+    /*public function __construct()
     {
         $this->middleware('auth:api')->except(['index', 'show']);
         $this->middleware(['scope:admin', 'can:edit general'])->only('update');
         $this->middleware(['scope:admin', 'can:create general'])->only('store');
         $this->middleware(['scope:admin', 'can:delete general'])->only('destroy');
-    }
+    }*/
 
     /**
      * Display a listing of the resource.
@@ -69,6 +69,8 @@ class ProductoController extends Controller
     {
         try {
             $producto = Producto::findOrFail($id);
+            $sql =$producto->toSql();
+            dd($sql);
 
             return response()->json($producto, 200);
         } catch (\Exception $e) {

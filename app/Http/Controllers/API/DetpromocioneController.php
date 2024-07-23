@@ -25,7 +25,7 @@ class DetpromocioneController extends Controller
     public function index()
     {
         try{
-            $detpromocione=Detpromocione::included()->sort()->filter()->getOrPaginate()->groupBy('promocione_id');
+            $detpromocione=Detpromocione::included()->sort()->filter()->getOrPaginate();
             return DetpromocioneResource::collection($detpromocione);
         }catch(\Throwable $e){
             return response()->json([
@@ -41,23 +41,24 @@ class DetpromocioneController extends Controller
     public function store(DetpromocioneRequest $request)
     {
         try {
-            $data = $request->validated();
-            $user = auth()->user();
-            $data['user_id'] = $user->id;
+            $data = $request->validated()['detalles'];
+            $detpromociones=[];
+           // $user = auth()->user();
+           // $data['user_id'] = $user->id;
 
-            if (!empty($data[0])) {
-                $detpromociones = Detpromocione::createMany($data);
-                 return response()->json([
-                'message' => 'Registros creados exitosamente',
-                'categoria' => new DetpromocioneResource($detpromociones)
-            ], Response::HTTP_CREATED);
-            } else {
-                $detpromociones = Detpromocione::create($data);
-                return response()->json([
-                    'message' => 'Registro creado exitosamente',
-                    'categoria' => new DetpromocioneResource($detpromociones)
-                ], Response::HTTP_CREATED);
-            }
+           foreach ($data as $detalle) {
+            $detpromocione=Detpromocione::create([
+                'cantidad'=>$detalle['cantidad'],
+                'descuento'=>$detalle['cantidad'],
+                'subtotal'=>$detalle['cantidad'],
+                'promocione_id'=>$detalle['promocione_id'],
+                'producto_id'=>$detalle['producto_id'],
+            ]);
+
+            $detpromociones[]=$detpromocione;
+           }
+
+           return response()->json(['message' => 'Registros creados exitosamente', 'data' => $detpromociones], 201);
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => 'Error al registrar el detalle de la promocion',

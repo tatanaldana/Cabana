@@ -17,21 +17,21 @@ class VentaSeeder extends Seeder
         $venta->metodo_pago='Efectivo';
         $venta->estado=true;
         $venta->total=20000;
-        $venta->usuarios_doc='1594872630';
+        $venta->user_id=\App\Models\User::all()->random()->id;
         $venta->save();
 
         $venta1=New Venta();
         $venta1->metodo_pago='Tarjeta debito';
         $venta1->estado=true;
         $venta1->total=40000;
-        $venta1->usuarios_doc='1234567890';
+        $venta1->user_id=\App\Models\User::all()->random()->id;
         $venta1->save();
 
         $venta2=New Venta();
         $venta2->metodo_pago='Nequi';
         $venta2->estado=false;
         $venta2->total=48000;
-        $venta2->usuarios_doc='123456789';
+        $venta2->user_id=\App\Models\User::all()->random()->id;
         $venta2->save();
     }
 }

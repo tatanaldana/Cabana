@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         {
-            $user = User::create([
+            User::create([
                 'id'=>'1014243818',
                 'name' => 'Jhonatan Aldana Rodriguez',
                 'email' => 'jbojhonatan@gmail.com',
@@ -29,11 +29,13 @@ class UserSeeder extends Seeder
                 'genero'=>'Masculino',
                 'direccion'=>'CL 76A 82 40',
 
-            ]);
+            ])->assignRole('admin');
     
-            $user->assignRole('admin');
     
-            User::factory(99)->create();
+            $users=User::factory(99)->create();
+            foreach ($users as $user) {
+                $user->assignRole('cliente');
+            }
         }
     }
 

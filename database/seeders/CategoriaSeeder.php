@@ -27,10 +27,10 @@ class CategoriaSeeder extends Seeder
             $categoria->nombre_cat = $nombre;
             $categoria->save();
 
-            Image::factory(1) ->create([
+          /*  Image::factory(1) ->create([
                     'imageable_id' => $categoria->id, // Asigna el id de la categoría
                     'imageable_type' => Categoria::class // Asigna el tipo de la relación
-                ]);
+                ]);*/
         }
     }
 }

@@ -40,7 +40,7 @@ class PqrController extends Controller
             $data['sugerencia']=$request['sugerencia'];
             $data['tipo_suge']=$request['tipo_suge'];
             $data['estado']=$request['estado'];
-            $data['users_doc']=$request['users_doc'];
+            $data['user_id']=$request['user_id'];
             $pqrs=Pqr::create($data);
             return response()->json(['message' => 'Registro creado exitosamente', 'data' => $pqrs], 201);
         }catch(\Throwable $th){

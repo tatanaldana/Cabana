@@ -24,19 +24,19 @@ class DetpromocioneRequest extends FormRequest
         switch ($this->route()->getActionMethod()) {
             case 'store':
                 return [
-                    '*.cantidad' => 'required|integer',
-                    '*.descuento' => 'required|integer',
-                    '*.subtotal' => 'required|integer',
-                    '*.promocione_id' => 'required|integer|exists:promociones,id',
-                    '*.producto_id' => 'required|integer|exists:productos,id'
+                    'detalles.*.cantidad' => 'required|integer',
+                    'detalles.*.descuento' => 'required|integer',
+                    'detalles.*.subtotal' => 'required|integer',
+                    'detalles.*.promocione_id' => 'required|integer|exists:promociones,id',
+                    'detalles.*.producto_id' => 'required|integer|exists:productos,id'
                 ];
 
             case 'update':
                 return [
-                    '*.cantidad' => 'required|integer',
-                    '*.descuento' => 'required|integer',
-                    '*.subtotal' => 'required|integer',
-                    '*.producto_id' => 'required|integer|exists:productos,id'
+                    'detalles.*.cantidad' => 'required|integer',
+                    'detalles.*.descuento' => 'required|integer',
+                    'detalles.*.subtotal' => 'required|integer',
+                    'detalles.*.producto_id' => 'required|integer|exists:productos,id'
                 ];
 
             default:

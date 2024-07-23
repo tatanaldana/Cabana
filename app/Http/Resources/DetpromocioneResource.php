@@ -15,7 +15,7 @@ class DetpromocioneResource extends JsonResource
     public function toArray(Request $request): array
     {
         return[
-            'id promicion' => $this->promocione_id,
+            'promocione_id' => $this->promocione_id,
             'cantidad' => $this->cantidad,
             'descuento' => $this->descuento,
             'subtotal' => $this->subtotal,

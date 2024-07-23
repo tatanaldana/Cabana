@@ -9,7 +9,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 
 class UserController extends Controller
 {
-    public function __construct()
+   /* public function __construct()
     {
         $this->middleware('auth:api');
         $this->middleware(['scope:admin','can:view general'])->only('index','show');
@@ -25,7 +25,7 @@ class UserController extends Controller
     public function index()
     {
         try {
-            $this->authorize('viewAny', User::class);
+            //$this->authorize('viewAny', User::class);
 
             $users = User::all();
 
@@ -41,7 +41,7 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         try {
-            $this->authorize('create', User::class);
+           // $this->authorize('create', User::class);
 
             $data = $request->validated();
             $user = User::create($data);
@@ -64,7 +64,7 @@ class UserController extends Controller
                 return response()->json(['error' => 'Usuario no encontrado'], 404);
             }
 
-            $this->authorize('view', $user);
+            //$this->authorize('view', $user);
 
             return response()->json($user, 200);
         } catch (\Throwable $th) {
@@ -84,7 +84,7 @@ class UserController extends Controller
                 return response()->json(['error' => 'Usuario no encontrado'], 404);
             }
 
-            $this->authorize('update', $user);
+           // $this->authorize('update', $user);
 
             $data = $request->validated();
             $user->update($data);
@@ -107,7 +107,7 @@ class UserController extends Controller
                 return response()->json(['error' => 'Usuario no encontrado'], 404);
             }
 
-            $this->authorize('delete', $user);
+            //$this->authorize('delete', $user);
 
             $user->delete();
 
