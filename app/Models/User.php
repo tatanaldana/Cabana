@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
@@ -77,5 +78,14 @@ class User extends Authenticatable
             return $this->morphOne(Image::class, 'imageable');
         }
 
+        public function findForPassport(string $email): User
+        {
+            return $this->where('email', $email)->first();
+        }
+
+        public function validateForPassportPasswordGrant(string $password): bool
+        {
+            return Hash::check($password, $this->password);
+        }
 
 }

@@ -8,8 +8,8 @@ use App\Models\Venta;
 use Illuminate\Http\Request;
 
 class VentaController extends Controller
-{/*
-    public function __construct()
+{
+   /* public function __construct()
     {
         $this->middleware('auth:api');
         $this->middleware(['scopes:read-registros'])->only('index','show');
