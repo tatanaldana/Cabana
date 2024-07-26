@@ -14,10 +14,10 @@ trait Token
         $baseUrl = Config::get('app.url');
         $endpoint = '/oauth/token';
         $url = $baseUrl . $endpoint;
-
         $scopes = $user->hasRole('admin') ? 'admin' : 'cliente';
 
-        $response = Http::asForm()->post($url, [
+
+        $response =  Http::asForm()->post($url, [
             'grant_type' => 'password',
             'client_id' => config('services.cabaña.client_id'),
             'client_secret' => config('services.cabaña.client_secret'),

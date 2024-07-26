@@ -16,8 +16,10 @@ class ProductoResource extends JsonResource
     public function toArray(Request $request): array
     {
         return[
-            'nombre' => $this->nom_producto,
-            'precio' => $this->precio_producto,
+            
+            'id' => $this->id,
+            'nom_producto' => $this->nom_producto,
+            'precio_producto' => $this->precio_producto,
             'detalle' => $this->detalle,
             'codigo' => $this->codigo,
             'detpromociones'=>DetpromocioneResource::collection($this->whenLoaded('detpromociones'))
