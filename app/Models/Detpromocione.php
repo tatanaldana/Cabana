@@ -13,7 +13,6 @@ class Detpromocione extends Model
 
     protected $table='detpromociones';
 
-
     protected $fillable = [
         'cantidad',
         'descuento',
@@ -22,11 +21,11 @@ class Detpromocione extends Model
         'producto_id',
     ];
 
-    public function promocione(){
+    public function promociones(){
         return $this->belongsTo(Promocione::class);
     }
     
-    public function producto(){
+    public function productos(){
         return $this->belongsTo(Producto::class);
     }
 

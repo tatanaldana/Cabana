@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Laravel\Passport\Token as PassportToken;
 use Illuminate\Support\Facades\Config;
+use Laravel\Passport\RefreshToken as PassportRefreshToken;
+
 
 trait Token
 {
@@ -37,47 +39,50 @@ trait Token
         }
     }
 
-    public function resolveAuthorization(User $user)
+    protected function resolveAuthorization(User $user, string $refreshToken): array
     {
-
         $baseUrl = Config::get('app.url');
         $endpoint = '/oauth/token';
         $url = $baseUrl . $endpoint;
-
-        $accessToken = $user->tokens()->where('name', 'access_token')->first();
-
-        if ($accessToken && $accessToken->expires_at->isPast()) {
-            $scopes = $user->hasRole('admin') ? 'admin' : 'cliente';
-
-            $response = Http::withHeaders([
+    
+        // Buscar el token de acceso para el usuario en la tabla oauth_access_tokens
+        $accessToken = $user->tokens->first(); // Obtener el primer token asociado al usuario
+    
+        if ($accessToken) {
+            // Revocar el token de acceso actual
+            Http::post($baseUrl . '/oauth/revoke', [
+                'token' => $accessToken->id,
+                'client_id' => config('services.cabaña.client_id'),
+                'client_secret' => config('services.cabaña.client_secret'),
+            ]);
+    
+            // Revocar el token de refresco actual
+            Http::post($baseUrl . '/oauth/revoke', [
+                'token' => $refreshToken,
+                'client_id' => config('services.cabaña.client_id'),
+                'client_secret' => config('services.cabaña.client_secret'),
+                'token_type_hint' => 'refresh_token',
+            ]);
+    
+            // Solicitar nuevos tokens
+            $response = Http::asForm([
                 'Accept' => 'application/json'
             ])->post($url, [
                 'grant_type' => 'refresh_token',
-                'refresh_token' => $accessToken->refresh_token,
+                'refresh_token' => $refreshToken,
                 'client_id' => config('services.cabaña.client_id'),
                 'client_secret' => config('services.cabaña.client_secret'),
-                'scope' => $scopes
+                'scope' => $user->hasRole('admin') ? 'admin' : 'cliente'
             ]);
-
+    
             if ($response->successful()) {
-                $access_token = $response->json();
-                
-                PassportToken::find($accessToken->id)->update([
-                    'id' => $access_token['access_token'],
-                    'scopes' => $scopes,
-                    'expires_at' => now()->addSeconds($access_token['expires_in'])
-                ]);
-
-                PassportToken::where('id', $accessToken->id)->update([
-                    'id' => $access_token['refresh_token'],
-                    'expires_at' => now()->addSeconds($access_token['expires_in'])
-                ]);
-
-                return $access_token;
+                return $response->json();
             } else {
                 $errorBody = $response->body();
                 throw new \Exception("La solicitud para refrescar el token de acceso falló: " . $response->status() . " - " . $errorBody);
             }
+        } else {
+            throw new \Exception("Token de acceso no encontrado.");
         }
     }
 }

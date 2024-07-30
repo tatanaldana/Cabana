@@ -6,9 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\CategoriaRequest;
 use App\Http\Resources\CategoriaResource;
 use App\Models\Categoria;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
-use Illuminate\Auth\Access\AuthorizationException;
+
 
 class CategoriaController extends Controller
 {
@@ -25,15 +24,8 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        try {
-            $categorias = Categoria::included()->sort()->filter()->getOrPaginate();
-            return CategoriaResource::collection($categorias);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Falla al obtener las categorias',
-                'error' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $categorias = Categoria::included()->sort()->filter()->getOrPaginate();
+        return CategoriaResource::collection($categorias);
     }
 
     /**
@@ -41,16 +33,8 @@ class CategoriaController extends Controller
      */
     public function show($id)
     {
-        try {
-            $categoria = Categoria::included()->findOrFail($id);
-            return new CategoriaResource($categoria);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Falla al obtener la categoria',
-                'error' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        $categoria = Categoria::included()->findOrFail($id);
+        return new CategoriaResource($categoria);
     }
 
     /**
@@ -58,29 +42,15 @@ class CategoriaController extends Controller
      */
     public function store(CategoriaRequest $request)
     {
-        try {
-           $this->authorize('create', Categoria::class);
+        $this->authorize('create', Categoria::class);
 
-            $data = $request->validated();
-            $data['user_id'] = Auth::id(); // Obtener el ID del usuario autenticado
+        $data = $request->validated();
+        $categoria = Categoria::create($data);
 
-            $categoria = Categoria::create($data);
-
-            return response()->json([
-                'message' => 'Categoría creada exitosamente',
-                'categoria' => new CategoriaResource($categoria)
-            ], Response::HTTP_CREATED);
-        } catch (AuthorizationException $e) {
-            return response()->json([
-                'error' => 'No tienes permiso para crear esta categoría.',
-                'message' => $e->getMessage()
-            ], Response::HTTP_FORBIDDEN);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error al intentar crear la categoría',
-                'error' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'message' => 'Categoría creada exitosamente',
+            'categoria' => new CategoriaResource($categoria)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -88,22 +58,15 @@ class CategoriaController extends Controller
      */
     public function update(CategoriaRequest $request, Categoria $categoria)
     {
-        try {
-            $this->authorize('update', $categoria);
+        $this->authorize('update', $categoria);
 
-            $data = $request->validated();
-            $categoria->update($data);
+        $data = $request->validated();
+        $categoria->update($data);
 
-            return response()->json([
-                'message' => 'Categoria actualizada exitosamente',
-                'categoria' => new CategoriaResource($categoria)
-            ], Response::HTTP_OK);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error al actualizar categoria',
-                'error' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'message' => 'Categoría actualizada exitosamente',
+            'categoria' => new CategoriaResource($categoria)
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -111,19 +74,12 @@ class CategoriaController extends Controller
      */
     public function destroy(Categoria $categoria)
     {
-        try {
-            $this->authorize('delete', $categoria);
+        $this->authorize('delete', $categoria);
 
-            $categoria->delete();
+        $categoria->delete();
 
-            return response()->json([
-                'message' => 'Categoria eliminada de manera exitosa'
-            ], Response::HTTP_OK);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Falla al eliminar la categoría',
-                'error' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'message' => 'Categoría eliminada de manera exitosa'
+        ], Response::HTTP_OK);
     }
 }

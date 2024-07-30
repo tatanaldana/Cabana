@@ -13,7 +13,7 @@ class Promocione extends Model
 
     protected $table='promociones';
 
-    protected $allowincluded=['detpromociones'];
+    protected $allowincluded=['detpromociones','detpromociones.productos'];
 
     protected $fillable = [
         'nom_promo',

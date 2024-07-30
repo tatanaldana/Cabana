@@ -31,21 +31,21 @@ class ProductoPolicy
     {
         return $user->hasRole('admin')
             ? Response::allow()
-            : Response::deny('No tienes permiso para crear esta categoría.');
+            : Response::deny('No tienes permiso para crear este producto.');
     }
 
-    public function update(User $user, Producto $producto): Response
+    public function update(User $user): Response
     {
         return $user->hasRole('admin') 
             ? Response::allow()
-            : Response::deny('No tienes permiso para actualizar esta categoría.');
+            : Response::deny('No tienes permiso para actualizar este producto.');
     }
 
-    public function delete(User $user, Producto $producto): Response
+    public function delete(User $user): Response
     {
         return $user->hasRole('admin') 
             ? Response::allow()
-            : Response::deny('No tienes permiso para eliminar esta categoría.');
+            : Response::deny('No tienes permiso para eliminar este producto.');
     }
 
 }

@@ -4,14 +4,14 @@ namespace App\Http\Requests\API\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ChangePasswordRequest extends FormRequest
+class RefreshTokenRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,8 +22,9 @@ class ChangePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'current_password' => 'required|string',
-            'new_password' => 'required|string|min:8|max:50|confirmed',
+            'user_id' => 'required|exists:users,id',
+            'refresh_token' => 'required|string',
         ];
     }
+
 }

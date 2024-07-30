@@ -11,19 +11,6 @@ class EventServiceProvider extends ServiceProvider
 {
     /**
      * The event to listener mappings for the application.
-     *
-     * @var array<class-string, array<int, class-string>>
-     */
-    protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
-        ],
-        'App\Events\AccessTokenExpired' => [
-            'App\Listeners\RevokeAccessToken',
-        ],
-    ];
-
-    /**
      * Register any events for your application.
      */
     public function boot(): void

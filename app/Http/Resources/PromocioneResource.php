@@ -14,6 +14,13 @@ class PromocioneResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id'=>$this->id,
+            'nom_promo'=>$this->nom_promo,
+            'total_promo'=>$this->total_promo,
+            'fecha creada'=>$this->created_at,
+            'fecha actualizada'=>$this->updated_at,
+            'detpromociones'=>DetpromocioneResource::collection($this->whenLoaded('detpromociones')),
+        ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\ProductoRequest;
+use App\Http\Resources\ProductoResource;
 use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -12,29 +13,23 @@ use Illuminate\Auth\Access\AuthorizationException;
 
 class ProductoController extends Controller
 {
-    /*public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api')->except(['index', 'show']);
         $this->middleware(['scope:admin', 'can:edit general'])->only('update');
         $this->middleware(['scope:admin', 'can:create general'])->only('store');
         $this->middleware(['scope:admin', 'can:delete general'])->only('destroy');
-    }*/
+    }
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        try {
-            $productos = Producto::all();
-            return response()->json($productos, 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Falla al obtener los productos',
-                'error' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+            $productos = Producto::included()->all();
+            return ProductoResource::collection($productos);
     }
+
 
     /**
      * Store a newly created resource in storage.
