@@ -6,28 +6,27 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\DetventaRequest;
 use App\Http\Resources\DetventaResource;
 use App\Models\Detventa;
+use Illuminate\Http\Response;
 
 
 class DetventaController extends Controller
-{/*
+{
     public function __construct()
     {
-        $this->middleware('auth:api');
-        $this->middleware(['scopes:read-registros'])->only('index','show');
-        $this->middleware(['scopes:create-registros','can:create general'])->only('store');
+        $this->middleware(['scope:admin', 'can:view general'])->only('index', 'show');
+        $this->middleware(['scope:cliente', 'can:ver personal cliente'])->only('show');
+        $this->middleware(['scope:admin', 'can:create general'])->only('store');
+        $this->middleware(['scope:cliente', 'can:registro parcial'])->only('store');
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        try{
-            $detventas = Detventa::included()->sort()->filter()->getOrPaginate();
-            return DetventaResource::collection($detventas);
-            
-        }catch(\Throwable $th){
-            return response()->json(['error'=>$th->getMessage()],500);
-        }
+            $this->authorize('viewAny', Detventa::class);
+
+            $detventas = Detventa::all();
+            return DetventaResource::collection($detventas);       
     }
 
     /**
@@ -35,29 +34,27 @@ class DetventaController extends Controller
      */
     public function store(DetventaRequest $request)
     {
-        try {
-            $detalles = $request->validated()['detalles'];
-            $detventas = [];
+        $this->authorize('create', Detventa::class);
 
-                foreach ($detalles as $detalle) {
-                    $detventa = Detventa::create([
-                        'nom_producto' => $detalle['nom_producto'],
-                        'pre_producto' => $detalle['pre_producto'],
-                        'cantidad' => $detalle['cantidad'],
-                        'subtotal' => $detalle['subtotal'],
-                        'venta_id' => $detalle['venta_id'],
-                    ]);
-
-                    $detventas[] = $detventa; // Opcional: Guardar cada instancia en un arreglo para respuesta posterior
-            }
-
-            return response()->json(['message' => 'Registros creados exitosamente', 'data' => $detventas], 201);
-            // Si estás utilizando recursos, puedes retornar el recurso de Detventa
-            // return DetventaResource::collection($detventas);
-
-        } catch (\Throwable $th) {
-            return response()->json(['error' => $th->getMessage()], 500);
+        $detalles = $request->validated()['detalles'];
+    
+        $detventas = [];
+        foreach ($detalles as $detalle) {
+            $detventa = Detventa::create([
+                'nom_producto' => $detalle['nom_producto'],
+                'pre_producto' => $detalle['pre_producto'],
+                'cantidad' => $detalle['cantidad'],
+                'subtotal' => $detalle['subtotal'],
+                'venta_id' => $detalle['venta_id'],
+            ]);
+    
+            $detventas[] = new DetventaResource($detventa);
         }
+    
+        return response()->json([
+            'message' => 'Registros creados exitosamente',
+            'data' => $detventas,
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -65,14 +62,13 @@ class DetventaController extends Controller
      */
     public function show($id)
     {
-        try {
-            $detventas = Detventa::included()->where('venta_id', $id)->get();
 
-            $detventasGrouped = $detventas->groupBy('venta_id');
+            $detventas = Detventa::included()->where('venta_id', $id)->get();
     
-            return response()->json( $detventasGrouped, 200);
-        } catch (\Throwable $th) {
-            return response()->json(['error' => $th->getMessage()], 500);
-        }
+            if ($detventas->isEmpty()) {
+                abort(404, 'Detalle de venta no encontrado'); 
+            }
+    
+            return DetventaResource::collection($detventas);
     }
 }

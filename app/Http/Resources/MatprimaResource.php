@@ -14,6 +14,16 @@ class MatprimaResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return[
+            'id'=>$this->id,
+            'referencia'=>$this->referencia,
+            'descripcion'=>$this->descripcion,
+            'existencia'=>$this->existencia,
+            'entrada'=>$this->entrada,
+            'salida'=>$this->salida,
+            'stock'=>$this->stock,
+            'created_at'=>$this->created_at,
+            'updated_at'=>$this->updated_at
+        ];
     }
 }

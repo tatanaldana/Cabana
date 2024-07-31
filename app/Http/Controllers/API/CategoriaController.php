@@ -24,7 +24,7 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        $categorias = Categoria::included()->sort()->filter()->getOrPaginate();
+        $categorias = Categoria::all();
         return CategoriaResource::collection($categorias);
     }
 

@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\ProductoRequest;
 use App\Http\Resources\ProductoResource;
 use App\Models\Producto;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class ProductoController extends Controller
@@ -26,7 +24,7 @@ class ProductoController extends Controller
      */
     public function index()
     {
-            $productos = Producto::included()->all();
+            $productos = Producto::all();
             return ProductoResource::collection($productos);
     }
 
@@ -63,10 +61,7 @@ class ProductoController extends Controller
     public function show($id)
     {
         try {
-            $producto = Producto::findOrFail($id);
-            $sql =$producto->toSql();
-            dd($sql);
-
+            $producto = Producto::included()->findOrFail($id);
             return response()->json($producto, 200);
         } catch (\Exception $e) {
             return app(\App\Exceptions\Handler::class)->render(request(), $e);

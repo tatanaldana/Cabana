@@ -13,8 +13,6 @@ class Detventa extends Model
 
     protected $table='detventas';
 
-    protected $allowincluded=['venta.user'];
-
     protected $fillable = [
         'nom_producto',
         'pre_producto',

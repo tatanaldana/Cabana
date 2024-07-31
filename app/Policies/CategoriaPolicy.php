@@ -11,7 +11,6 @@ class CategoriaPolicy
     {
         public function create(User $user): Response
         {
-            Log::info('Política de creación evaluada para usuario ID: ' . $user->id);
             return $user->hasRole('admin')
                 ? Response::allow()
                 : Response::deny('No tienes permiso para crear esta categoría.');

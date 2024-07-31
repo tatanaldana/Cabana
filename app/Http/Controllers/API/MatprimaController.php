@@ -4,30 +4,29 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\MatprimaRequest;
+use App\Http\Resources\MatprimaResource;
 use App\Models\Matprima;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class MatprimaController extends Controller
-{/*
+{
     public function __construct()
     {
             $this->middleware('auth:api');
-            $this->middleware(['scopes:read-registros'])->only('index','show');
-            $this->middleware(['scopes:update-registros','can:update general'])->only('update');
-            $this->middleware(['scopes:create-registros','can:create general'])->only('store');
-            $this->middleware(['scopes:delete-registros','can:delete general'])->only('destroy');
+            $this->middleware(['scope:admin', 'can:view general'])->only('index', 'show');
+            $this->middleware(['scope:admin', 'can:edit general'])->only('update');
+            $this->middleware(['scope:admin', 'can:create general'])->only('store');
+            $this->middleware(['scope:admin', 'can:delete general'])->only('destroy');
     }
-    /**
+      /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        try{
-            $data=Matprima::all();
-            return response()->json($data,200);
-        }catch(\Throwable $th){
-            return response()->json(['error'=>$th->getMessage()],500);
-        }
+        $this->authorize('viewAny', Matprima::class);
+
+        $matprimas = Matprima::all();
+        return MatprimaResource::collection($matprimas);
     }
 
     /**
@@ -35,72 +34,56 @@ class MatprimaController extends Controller
      */
     public function store(MatprimaRequest $request)
     {
-        try{
-            $data['referencia']=$request['referencia'];
-            $data['descripcion']=$request['descripcion'];
-            $data['existencia']=$request['existencia'];
-            $data['entrada']=$request['entrada'];
-            $data['salida']=$request['salida'];
-            $data['stock']=$request['stock'];
-            $matprimas=Matprima::create($data);
-            return response()->json(['message' => 'Registro creado exitosamente', 'data' => $matprimas], 201);
-        }catch(\Throwable $th){
-            return response()->json(['error'=>$th->getMessage()],500);
-        }
+        $this->authorize('create', Matprima::class);
+
+        $data = $request->validated();
+        $matprima = Matprima::create($data);
+
+        return response()->json(
+            ['message' => 'Registro creado exitosamente', 
+            'data' => new MatprimaResource($matprima)]
+            ,Response::HTTP_CREATED);
     }
-    
 
     /**
      * Display the specified resource.
      */
-    public function show($id){
-        try{
-            $matprimas=Matprima::find($id);
-            if(!$matprimas) {
-                return response()->json(['error' => 'Materia prima no encontrada'], 404);
-            }
-            return response()->json($matprimas, 200);
-        }catch(\Throwable $th){
-            return response()->json(['error' => $th->getMessage()], 500);
-        }
+    public function show($id)
+    {
+        $matprima = Matprima::findOrFail($id);
+        $this->authorize('view', $matprima);
+
+        return new MatprimaResource($matprima);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(MatprimaRequest $request,$id)
+    public function update(MatprimaRequest $request, $id)
     {
-        try{
-            $data['referencia']=$request['referencia'];
-            $data['descripcion']=$request['descripcion'];
-            $data['existencia']=$request['existencia'];
-            $data['entrada']=$request['entrada'];
-            $data['salida']=$request['salida'];
-            $data['stock']=$request['stock'];
-            $matprimas = Matprima::find($id);
-            if(!$matprimas) {
-                return response()->json(['error' => 'Materia prima no encontrada'], 404);
-            }
-            $matprimas->update($data);
-            return response()->json(['message' => 'Actualización exitosa', 'data' => $matprimas], 200);
-        }catch(\Throwable $th){
-            return response()->json(['error' => $th->getMessage()], 500);
-        }
+        $matprima = Matprima::findOrFail($id);
+        $this->authorize('update', $matprima);
+
+        $data = $request->validated();
+        $matprima->update($data);
+
+        return response()->json(
+            ['message' => 'Actualización exitosa', 
+            'data' => new MatprimaResource($matprima)], 
+            Response::HTTP_OK);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id){
-        try{
-            $matprimas=Matprima::find($id);
-            if(!$matprimas) {
-                return response()->json(['error' => 'Materia prima no encontrada'], 404);
-            }
-            $matprimas->delete();
-            return response()->json(['message' => 'Eliminación exitosa'], 200);
-        }catch(\Throwable $th){
-            return response()->json(['error' => $th->getMessage()], 500);
-        }
+    public function destroy($id)
+    {
+        $matprima = Matprima::findOrFail($id);
+        $this->authorize('delete', $matprima);
+
+        $matprima->delete();
+        return response()->json(
+            ['message' => 'Eliminación exitosa'], Response::HTTP_OK);
     }
 }
+
