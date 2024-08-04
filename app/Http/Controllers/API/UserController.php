@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\UserRequest;
 use App\Http\Resources\UserResource;
-use App\Models\User;
 use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
+
     public function __construct()
     {
         $this->middleware('auth:api');
-        $this->middleware(['scope:admin','can:view general'])->only('index','show');
-        $this->middleware(['scope:cliente','can:view cliente'])->only('show');
-        $this->middleware(['scope:admin','can:update general'])->only('update');
-        $this->middleware(['scope:cliente','can:update parcial'])->only('update');
-        $this->middleware(['scope:admin','can:delete general'])->only('destroy');
-        $this->middleware(['scope:cliente','can:Eliminacion parcial'])->only('destroy');
+        $this->middleware(['scope:admin','can:view general'])->only('index');
+        $this->middleware(['scope:admin,cliente','permission:view general|ver personal cliente'])->only('show');
+        $this->middleware(['scope:admin', 'permission:create general'])->only('store');
+        $this->middleware(['scope:admin,cliente', 'permission:edit general|edicion parcial'])->only('update');
+        $this->middleware(['scope:admin,cliente', 'permission:delete general|Eliminacion parcial'])->only('destroy');
+
     }
+
 
     /**
      * Display a listing of the resource.
@@ -52,10 +54,8 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
-    {
-        $user = User::findOrFail($id); 
-
+    public function show(User $user)
+    {   
         $this->authorize('view', $user);
 
         return response()->json([
@@ -67,10 +67,8 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, $id)
+    public function update(UserRequest $request, User $user)
     {
-        $user = User::findOrFail($id);
-
         $this->authorize('update', $user);
 
         $data = $request->validated();
@@ -85,10 +83,8 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($id); 
-
         $this->authorize('delete', $user);
 
         $user->delete();

@@ -12,11 +12,13 @@ class MatprimaController extends Controller
 {
     public function __construct()
     {
-            $this->middleware('auth:api');
-            $this->middleware(['scope:admin', 'can:view general'])->only('index', 'show');
-            $this->middleware(['scope:admin', 'can:edit general'])->only('update');
-            $this->middleware(['scope:admin', 'can:create general'])->only('store');
-            $this->middleware(['scope:admin', 'can:delete general'])->only('destroy');
+        $this->middleware('auth:api');
+        $this->middleware(['scope:admin','can:view general'])->only('index');
+        $this->middleware(['scope:admin','permission:view general'])->only('show');
+        $this->middleware(['scope:admin', 'permission:create general'])->only('store');
+        $this->middleware(['scope:admin','permission:edit general}'])->only('update');
+        $this->middleware(['scope:admin', 'permission:delete general'])->only('destroy');
+
     }
       /**
      * Display a listing of the resource.
@@ -48,20 +50,22 @@ class MatprimaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
-    {
-        $matprima = Matprima::findOrFail($id);
+    public function show(Matprima $matprima)
+    {    
         $this->authorize('view', $matprima);
+        
+        return response()->json([
+            'message' => 'Promociones obtenido exitosamente',
+            'data' =>new MatprimaResource($matprima)
+        ], Response::HTTP_OK);
 
-        return new MatprimaResource($matprima);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(MatprimaRequest $request, $id)
+    public function update(MatprimaRequest $request, Matprima $matprima)
     {
-        $matprima = Matprima::findOrFail($id);
         $this->authorize('update', $matprima);
 
         $data = $request->validated();
@@ -76,9 +80,8 @@ class MatprimaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(Matprima $matprima)
     {
-        $matprima = Matprima::findOrFail($id);
         $this->authorize('delete', $matprima);
 
         $matprima->delete();

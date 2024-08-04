@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nom_producto',50);
             $table->integer('precio_producto')->notNull();
             $table->string('detalle');
-            $table->string('codigo', 10);
+            $table->string('codigo', 10)->unique();
             $table->timestamps();
             $table->unsignedBigInteger('categoria_id')->nullable();
             $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('restrict');
@@ -28,6 +28,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('productos', function (Blueprint $table) {
+            $table->dropForeign(['categoria_id']);
+        });
         Schema::dropIfExists('productos');
     }
 };

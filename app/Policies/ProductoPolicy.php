@@ -5,9 +5,11 @@ namespace App\Policies;
 use App\Models\Producto;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProductoPolicy
 {
+    use HandlesAuthorization;
     /**
      * Determine whether the user can view any models.
      */
@@ -30,22 +32,22 @@ class ProductoPolicy
     public function create(User $user): Response
     {
         return $user->hasRole('admin')
-            ? Response::allow()
-            : Response::deny('No tienes permiso para crear este producto.');
+            ? $this->allow()
+            : $this->deny('No tienes permiso para crear este producto.');
     }
 
     public function update(User $user): Response
     {
         return $user->hasRole('admin') 
-            ? Response::allow()
-            : Response::deny('No tienes permiso para actualizar este producto.');
+            ? $this->allow()
+            : $this->deny('No tienes permiso para actualizar este producto.');
     }
 
     public function delete(User $user): Response
     {
         return $user->hasRole('admin') 
-            ? Response::allow()
-            : Response::deny('No tienes permiso para eliminar este producto.');
+            ? $this->allow()
+            : $this->deny('No tienes permiso para eliminar este producto.');
     }
 
 }

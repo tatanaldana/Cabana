@@ -3,8 +3,17 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+
+use App\Models\Categoria;
+use App\Models\Detventa;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
+use App\Models\Producto;
+use App\Models\User;
+use App\Policies\CategoriaPolicy;
+use App\Policies\DetventaPolicy;
+use App\Policies\ProductoPolicy;
+use App\Policies\UserPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -14,12 +23,10 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        'App\Models\Categoria' => 'App\Policies\CategoriaPolicy',
-        'App\Models\User' => 'App\Policies\UserPolicy',
-        'App\Models\Producto' => 'App\Policies\ProductoPolicy',
-        'App\Models\Detventa' => 'App\Policies\DetventaPolicy',
-        
-        
+        Categoria::class => CategoriaPolicy::class,
+        User::class => UserPolicy::class,
+        Producto::class => ProductoPolicy::class,
+        Detventa::class => DetventaPolicy::class,
     ];
     /**
      * Register any authentication / authorization services.

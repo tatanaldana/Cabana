@@ -41,17 +41,18 @@ class Handler extends ExceptionHandler
             ], 401);
         }
 
+        if ($exception instanceof AuthorizationException) {
+            return response()->json([
+                'error' => 'No autorizado. ' . $exception->getMessage(),
+            ], 403);
+        }
+
         if ($exception instanceof MissingScopeException) {
             return response()->json([
                 'error' => 'Alcance requerido no proporcionado. ' . $exception->getMessage(),
             ], 403);
         }
 
-        if ($exception instanceof AuthorizationException) {
-            return response()->json([
-                'error' => 'No autorizado. ' . $exception->getMessage(),
-            ], 403);
-        }
 
         if ($exception instanceof ModelNotFoundException) {
             return response()->json([
@@ -70,8 +71,6 @@ class Handler extends ExceptionHandler
             'error' => 'Error interno del servidor. ' . $exception->getMessage(),
         ], 500);
 
-
-        return parent::render($request, $exception);
     }
 }
 

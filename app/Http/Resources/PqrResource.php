@@ -14,6 +14,14 @@ class PqrResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return[
+            'id'=>$this->id,
+            'sugenrencia' => $this->sugerencia,
+            'tipo_suge' => $this->tipo_suge,
+            'estado' => $this->estado,
+            'created_at'=>$this->created_at,
+            'update_at'=>$this->update_at,
+            'user_id' => $this->user_id
+        ];
     }
 }

@@ -4,31 +4,27 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\PromocioneRequest;
+use App\Http\Resources\PromocioneResource;
 use App\Models\Promocione;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PromocioneController extends Controller
 {
-/*
+
     public function __construct()
-    {/*
-        $this->middleware('auth:api')->except(['index','show']);
-        $this->middleware(['scopes:read-registros'])->only('index','show');
-        $this->middleware(['scopes:update-registros','can:update general'])->only('update');
-        $this->middleware(['scopes:create-registros','can:create general'])->only('store');
-        $this->middleware(['scopes:delete-registros','can:delete general'])->only('destroy');
+    {
+        $this->middleware('auth:api')->except(['index', 'show']);
+        $this->middleware(['scope:admin', 'permission:create general'])->only('store');
+        $this->middleware(['scope:admin', 'permission:edit general'])->only('update');
+        $this->middleware(['scope:admin', 'permission:delete general'])->only('destroy');
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        try{
             $data=Promocione::all();
-            return response()->json($data,200);
-        }catch(\Throwable $th){
-            return response()->json(['error'=>$th->getMessage()],500);
-        }
+            return PromocioneResource::collection($data);
     }
 
     /**
@@ -36,63 +32,55 @@ class PromocioneController extends Controller
      */
     public function store(PromocioneRequest $request)
     {
-        try{
+            $this->authorize('create', Promocione::class);
             $data = $request->validated();
-            $promociones=Promocione::create($data);
-            return response()->json(['message' => 'Registro creado exitosamente', 'data' => $promociones], 201);
-        }catch(\Throwable $th){
-            return response()->json(['error'=>$th->getMessage()],500);
-        }
+            $promocione=Promocione::create($data);
+            
+        return response()->json([
+            'message' => 'Promoción creada exitosamente',
+            'data' => new PromocioneResource($promocione)
+        ], Response::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Promocione $promocione)
     {
-        try{
-            $promociones=Promocione::included()->find($id);
-            if(!$promociones) {
-                return response()->json(['error' => 'Promocion no encontrada'], 404);
-            }
-            return response()->json($promociones, 200);
-        }catch(\Throwable $th){
-            return response()->json(['error' => $th->getMessage()], 500);
-        }
+        return response()->json([
+            'message' => 'Promociones obtenido exitosamente',
+            'data' =>new PromocioneResource($promocione)
+        ], Response::HTTP_OK);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(PromocioneRequest $request,$id)
+    public function update(PromocioneRequest $request,Promocione $promocione)
     {
-        try{
-            $data['nom_promo']=$request['nom_promo'];
-            $data['total_promo']=$request['total_promo'];
-            $promociones = Promocione::find($id);
-            if(!$promociones) {
-                return response()->json(['error' => 'Promocion no encontrada'], 404);
-            }
-            $promociones->update($data);
-            return response()->json(['message' => 'Actualización exitosa', 'data' => $promociones], 200);
-        }catch(\Throwable $th){
-            return response()->json(['error' => $th->getMessage()], 500);
-        }
+            $this->authorize('update', $promocione);
+            $data = $request->validated();
+
+            $promocione->update($data);
+            return response()->json([
+                'message' => 'Promocion actualizada exitosamente',
+                'data' => new PromocioneResource($promocione)
+            ], Response::HTTP_OK);
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id){
-        try{
-            $promociones=Promocione::find($id);
-            if(!$promociones) {
-                return response()->json(['error' => 'Promocion no encontrada'], 404);
-            }
-            $promociones->delete();
-            return response()->json(['message' => 'Eliminación exitosa'], 200);
-        }catch(\Throwable $th){
-            return response()->json(['error' => $th->getMessage()], 500);
-        }
+    public function destroy(Promocione $promocione)
+    {
+        $this->authorize('delete', $promocione);
+
+        $promocione->delete();
+
+        return response()->json([
+            'message' => 'Promoción eliminada de manera exitosa'
+        ], Response::HTTP_OK);
+
     }
 }

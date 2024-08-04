@@ -20,6 +20,8 @@ class LoginController extends Controller
         $user = User::where('email', $request->email)->firstOrFail();
 
         if (Hash::check($request->password, $user->password)) {
+            
+            $user->revokeOldTokens($user);
              // Generar el token de acceso con el scope adecuado
              $token = $user->getAccessToken($user, $request->password);
             // Cargar los roles del usuario

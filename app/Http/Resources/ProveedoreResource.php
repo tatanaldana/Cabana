@@ -14,6 +14,11 @@ class ProveedoreResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return[
+            'codigo'=>$this->codigo,
+            'nombre'=>$this->nombre,
+            'telefono'=>$this->telefono,
+            'direccion'=>$this->direccion
+        ];
     }
 }

@@ -4,30 +4,31 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\VentaRequest;
+use App\Http\Resources\VentaResource;
 use App\Models\Venta;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class VentaController extends Controller
 {
-   /* public function __construct()
+   public function __construct()
     {
         $this->middleware('auth:api');
-        $this->middleware(['scopes:read-registros'])->only('index','show');
-        $this->middleware(['scopes:update-registros','can:update general'])->only('update');
-        $this->middleware(['scopes:create-registros','can:create general'])->only('store');
-        $this->middleware(['scopes:delete-registros','can:delete general'])->only('destroy');
+
+        $this->middleware(['scope:admin','can:view general'])->only('index');
+        $this->middleware(['scope:admin,cliente','permission:view general|ver personal cliente'])->only('show');
+        $this->middleware(['scope:admin,cliente', 'permission:edit general|edicion parcial'])->only('update');
+        $this->middleware(['scope:admin,cliente', 'permission:delete general|Eliminacion parcial'])->only('destroy');
     }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        try{
-            $data=Venta::all();
-            return response()->json($data,200);
-        }catch(\Throwable $th){
-            return response()->json(['error'=>$th->getMessage()],500);
-        }
+        $this->authorize('viewAny', Venta::class);
+        $venta=Venta::all();
+        return VentaResource::collection($venta);
+
     }
 
     /**
@@ -35,59 +36,55 @@ class VentaController extends Controller
      */
     public function store(VentaRequest $request)
     {
-        try{
-            $data = $request->validated();
-            $ventas=Venta::create($data);
-            return response()->json(['message' => 'Registro creado exitosamente', 'data' => $ventas], 201);
-        }catch(\Throwable $th){
-            return response()->json(['error'=>$th->getMessage()],500);
-        }
+        $this->authorize('create', Venta::class);
+        $data = $request->validated();
+        $venta=Venta::create($data);
+        return response()->json([
+            'message' => 'Categoría creada exitosamente',
+            'data' => new VentaResource($venta)
+        ], Response::HTTP_CREATED);
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Venta $venta)
     {
-        try{
-            $ventas=Venta::included()->find($id);
-            if(!$ventas) {
-                return response()->json(['error' => 'Venta no encontrada'], 404);
-            }
-            return response()->json($ventas, 200);
-        }catch(\Throwable $th){
-            return response()->json(['error' => $th->getMessage()], 500);
-        }
+        $this->authorize('view', $venta);
+
+        return response()->json([
+            'message' => 'Venta obtenida exitosamente',
+            'data' =>new VentaResource($venta)
+        ], Response::HTTP_OK);
+        
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(VentaRequest $request,$id){
-        try{
-            $data = $request->validated();
-            $ventas = Venta::find($id);
-            if(!$ventas) {
-                return response()->json(['error' => 'Venta no encontrada'], 404);
-            }
-            $ventas->update($data);
-            return response()->json(['message' => 'Actualización exitosa', 'data' => $ventas], 200);
-        }catch(\Throwable $th){
-            return response()->json(['error' => $th->getMessage()], 500);
-        }
+    public function update(VentaRequest $request,Venta $venta)
+    {
+        $this->authorize('update', $venta);
+        $data = $request->validated();
+        $venta->update($data);
+
+        return response()->json([
+            'message' => 'Venta actualizada exitosamente',
+            'data' => new VentaResource($venta)
+        ], Response::HTTP_OK);
 
     }
 
-    public function destroy($id){
-        try{
-            $ventas=Venta::find($id);
-            if(!$ventas) {
-                return response()->json(['error' => 'Venta no encontrada'], 404);
-            }
-            $ventas->delete();
-            return response()->json(['message' => 'Eliminación exitosa'], 200);
-        }catch(\Throwable $th){
-            return response()->json(['error' => $th->getMessage()], 500);
-        }
+    public function destroy(Venta $venta){
+        
+        $this->authorize('delete', $venta);
+
+        $venta->delete();
+
+        return response()->json([
+            'message' => 'Venta eliminada de manera exitosa'
+        ], Response::HTTP_OK);
+                   
     }
 }

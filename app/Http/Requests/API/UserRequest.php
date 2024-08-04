@@ -41,7 +41,7 @@ class UserRequest extends FormRequest
         return [
             'tel'=>'required|string|max:10',
             'direccion'=>'required|string|max:50',
-         //   'genero'=>'required|string|max:50'
+            'genero'=>'required|string|max:50'
         ];
 
             default:

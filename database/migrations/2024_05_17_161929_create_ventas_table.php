@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('metodo_pago',20);
             $table->boolean('estado')->default(false);   
-            $table->integer('total')->nullable();  
+            $table->integer('total')->nullable();
+            $table->boolean('medio_env')->default(false); 
             $table->timestamps(); 
             $table->BigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');

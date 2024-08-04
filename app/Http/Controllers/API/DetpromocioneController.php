@@ -16,8 +16,9 @@ class DetpromocioneController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']);
-        $this->middleware(['scope:admin', 'can:edit general'])->only('update');
-        $this->middleware(['scope:admin', 'can:create general'])->only('store');
+        $this->middleware(['scope:admin', 'permission:create general'])->only('store');
+        $this->middleware(['scope:admin', 'permission:edit general'])->only('update');
+
     }
 
     /**

@@ -85,4 +85,12 @@ trait Token
             throw new \Exception("Token de acceso no encontrado.");
         }
     }
+
+    public function revokeOldTokens(User $user)
+    {
+        // Revocar todos los tokens de acceso del usuario
+        $user->tokens->each(function ($token) {
+            $token->revoke();
+        });
+    }
 }

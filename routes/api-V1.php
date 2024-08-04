@@ -16,6 +16,8 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\VentaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\API\Auth\RefreshTokenController;
+use App\Http\Controllers\API\DB\ProcedimientoController;
+use App\Http\Controllers\API\DB\ViewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +36,13 @@ Route::post('logout', [LogoutController::class, 'logout']);
 Route::post('refreshToken', [RefreshTokenController::class, 'refreshToken']);
 Route::post('changepassword', [ChangePasswordController::class, 'changePassword']);
 
+Route::get('/contar-clientes', [ProcedimientoController::class, 'contarClientesUltimoMes']);
+Route::get('/total-ventas', [ProcedimientoController::class, 'totalVentasDiaAnterior']);
+Route::get('/contar-ventas', [ProcedimientoController::class, 'contarVentasPorMedioEnv']);
+
+Route::get('/promocion-vendidas', [ViewController::class, 'promocionMasUnidadesVendidas']);
+Route::get('/producto-mas-vendido', [ViewController::class, 'productoMasVendido']);
+Route::get('/cliente-mas-ventas', [ViewController::class, 'clienteMasVentas']);
 
 
 Route::apiResource('categorias',CategoriaController::class);

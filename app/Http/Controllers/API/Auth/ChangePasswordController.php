@@ -20,26 +20,36 @@ class ChangePasswordController extends Controller
     {
         $validatedData = $request->validated();
 
-        // Obtener el usuario autenticado usando Passport
-        $user = Auth::user();
+        // Obtener el ID del usuario autenticado
+        $userId = Auth::guard('api')->id();
 
-        // Verificar que $user es una instancia de User
-        if (!($user instanceof Model)) {
-            return response()->json(['error' => 'El usuario no es una instancia de Eloquent Model.'], 500);
+        // Buscar el token en la base de datos utilizando el ID del usuario
+        $tokenModel = Token::where('user_id', $userId)->first();
+
+        if (!$tokenModel) {
+            return response()->json(['error' => 'Token no encontrado.'], 401);
         }
 
         // Verificar si la contraseña actual proporcionada es correcta
-        if (!Hash::check($validatedData['current_password'], $user->password)) {
+        if (!Hash::check($validatedData['current_password'], $tokenModel->user->password)) {
             return response()->json(['error' => 'La contraseña actual es incorrecta.'], 400);
         }
 
-        // Hashear la nueva contraseña y actualizar en el modelo
-        $user->password = Hash::make($validatedData['new_password']);
-        $user->save(); // Guarda los cambios en la base de datos
+        // Actualizar la contraseña
+        $tokenModel->user->password = Hash::make($validatedData['new_password']);
+        $tokenModel->user->save();
 
-        // Invalidar todos los tokens del usuario
-        Token::where('user_id', $user->id)->delete();
+        // Revocar todos los tokens del usuario
+        $this->revokeUserTokens($tokenModel->user);
 
         return response()->json(['message' => 'Contraseña cambiada exitosamente y sesión cerrada.']);
+    }
+
+    protected function revokeUserTokens($user)
+    {
+        // Revocar todos los tokens de acceso del usuario
+        $user->tokens->each(function ($token) {
+            $token->revoke();
+        });
     }
 }

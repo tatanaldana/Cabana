@@ -4,16 +4,19 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
 {
-    /**
+    use HandlesAuthorization;
+        /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user): Response
     {
-        return $user->hasRole('admin');
-        
+        return $user->hasRole('admin')  
+        ? $this->allow()
+        : $this->deny('No tienes permiso para realizar esta accion.');
     }
 
     /**
@@ -21,9 +24,10 @@ class UserPolicy
      */
     public function view(User $user, User $model): Response
     {
-        return $user->hasRole('admin') || $user->id === $model->id
-            ? Response::allow()
-            : Response::deny('No tienes permiso para ver este usuario.');
+        return $user->hasRole('admin') || $user->id === $model->id 
+         ? $this->allow()
+        : $this->deny('No tienes permiso para ver este usuario.');
+
     }
 
     /**
@@ -32,8 +36,8 @@ class UserPolicy
     public function create(User $user): Response
     {
         return $user->hasRole('admin')
-        ? Response::allow()
-        : Response::deny('No tienes permiso para crear este usuario.');
+        ? $this->allow()
+        : $this->deny('No tienes permiso para crear este usuario.');
     }
 
     /**
@@ -42,15 +46,18 @@ class UserPolicy
     public function update(User $user, User $model): Response
     {
         return $user->hasRole('admin') || $user->id === $model->id
-            ? Response::allow()
-            : Response::deny('No tienes permiso para actualizar este usuario.');
+        ? $this->allow()
+        : $this->deny('No tienes permiso para actualizar este usuario.');
     }
 
+    /**
+     * Determine whether the user can delete the model.
+     */
     public function delete(User $user, User $model): Response
     {
-        return $user->hasRole('admin') || $user->id === $model->id
-            ? Response::allow()
-            : Response::deny('No tienes permiso para eliminar este usuario.');
+        return $user->hasRole('admin') || $user->id === $model->id 
+        ? $this->allow()
+        : $this->deny('No tienes permiso para eliminar este usuario.');
     }
 
 }

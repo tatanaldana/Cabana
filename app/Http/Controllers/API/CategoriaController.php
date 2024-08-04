@@ -14,9 +14,9 @@ class CategoriaController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index', 'show']);
-        $this->middleware(['scope:admin', 'can:edit general'])->only('update');
-        $this->middleware(['scope:admin', 'can:create general'])->only('store');
-        $this->middleware(['scope:admin', 'can:delete general'])->only('destroy');
+        $this->middleware(['scope:admin', 'permission:create general'])->only('store');
+        $this->middleware(['scope:admin', 'permission:edit general'])->only('update');
+        $this->middleware(['scope:admin', 'permission:delete general'])->only('destroy');
     }
 
     /**
@@ -31,10 +31,13 @@ class CategoriaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(Categoria $categoria)
     {
-        $categoria = Categoria::included()->findOrFail($id);
-        return new CategoriaResource($categoria);
+        return response()->json([
+            'message' => 'cataegoria obtenida exitosamente',
+            'data' =>new CategoriaResource($categoria)
+        ], Response::HTTP_OK);
+
     }
 
     /**
@@ -49,7 +52,7 @@ class CategoriaController extends Controller
 
         return response()->json([
             'message' => 'Categoría creada exitosamente',
-            'categoria' => new CategoriaResource($categoria)
+            'data' => new CategoriaResource($categoria)
         ], Response::HTTP_CREATED);
     }
 
@@ -65,7 +68,7 @@ class CategoriaController extends Controller
 
         return response()->json([
             'message' => 'Categoría actualizada exitosamente',
-            'categoria' => new CategoriaResource($categoria)
+            'data' => new CategoriaResource($categoria)
         ], Response::HTTP_OK);
     }
 

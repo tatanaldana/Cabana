@@ -2,13 +2,14 @@
 
 namespace App\Policies;
 
-use App\Models\Matprima;
+use App\Models\Proveedore;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class MatprimaPolicy
+class ProveedorePolicy
 {
+
     use HandlesAuthorization;
     /**
      * Determine whether the user can view any models.
@@ -17,10 +18,10 @@ class MatprimaPolicy
     {
         return $user->hasRole('admin')      
         ? $this->allow()
-        : $this->deny('No tienes permiso para ver el listado de materia primas.');
+        : $this->deny('No tienes permiso para ver el listado de proveedores.');
     }
 
-    public function view(User $user, Matprima $matprima): Response
+    public function view(User $user, Proveedore $proveedore): Response
     {
         return $user->hasRole('admin')
             ? $this->allow()
@@ -34,17 +35,18 @@ class MatprimaPolicy
             : $this->deny('No tienes permiso para crear una nueva materia prima.');
     }
 
-    public function update(User $user, Matprima $matprima): Response
+    public function update(User $user, Proveedore $proveedore): Response
     {
         return $user->hasRole('admin')
             ? $this->allow()
             : $this->deny('No tienes permiso para actualizar esta materia prima.');
     }
 
-    public function delete(User $user, Matprima $matprima): Response
+    public function delete(User $user, Proveedore $proveedore): Response
     {
         return $user->hasRole('admin')
             ? $this->allow()
             : $this->deny('No tienes permiso para eliminar esta materia prima.');
     }
+
 }

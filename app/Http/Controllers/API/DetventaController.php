@@ -13,10 +13,10 @@ class DetventaController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['scope:admin', 'can:view general'])->only('index', 'show');
-        $this->middleware(['scope:cliente', 'can:ver personal cliente'])->only('show');
-        $this->middleware(['scope:admin', 'can:create general'])->only('store');
-        $this->middleware(['scope:cliente', 'can:registro parcial'])->only('store');
+        $this->middleware('auth:api');
+        $this->middleware(['scope:admin','can:view general'])->only('index');
+        $this->middleware(['scope:admin,cliente','permission:view general|ver personal cliente'])->only('show');
+        $this->middleware(['scope:admin,cliente', 'permission:create general|registro parcial'])->only('store');
     }
     /**
      * Display a listing of the resource.
