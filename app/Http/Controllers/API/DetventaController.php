@@ -14,7 +14,7 @@ class DetventaController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api');
-        $this->middleware(['scope:admin','can:view general'])->only('index');
+        $this->middleware(['scope:admin','permission:view general'])->only('index');
         $this->middleware(['scope:admin,cliente','permission:view general|ver personal cliente'])->only('show');
         $this->middleware(['scope:admin,cliente', 'permission:create general|registro parcial'])->only('store');
     }

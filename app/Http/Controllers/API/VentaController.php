@@ -15,7 +15,7 @@ class VentaController extends Controller
     {
         $this->middleware('auth:api');
 
-        $this->middleware(['scope:admin','can:view general'])->only('index');
+        $this->middleware(['scope:admin','permission:view general'])->only('index');
         $this->middleware(['scope:admin,cliente','permission:view general|ver personal cliente'])->only('show');
         $this->middleware(['scope:admin,cliente', 'permission:edit general|edicion parcial'])->only('update');
         $this->middleware(['scope:admin,cliente', 'permission:delete general|Eliminacion parcial'])->only('destroy');

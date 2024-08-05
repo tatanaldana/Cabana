@@ -13,9 +13,9 @@ class DetventaPolicy
      /**
      * Determine whether the user can view any Detventas.
      */
-    public function viewAny(User $user,Detventa $detventa): Response
+    public function viewAny(User $user): Response
     {
-        return $user->hasRole('admin') || $user->id === $detventa->user_id
+        return $user->hasRole('admin')
             ? $this->allow()
             : $this->deny('No tienes permiso para ver los detalles de venta.');
     }
