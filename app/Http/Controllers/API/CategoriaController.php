@@ -33,8 +33,9 @@ class CategoriaController extends Controller
      */
     public function show(Categoria $categoria)
     {
+        $categoria = Categoria::included()->findOrFail($categoria->id);
         return response()->json([
-            'message' => 'cataegoria obtenida exitosamente',
+            'message' => 'Categoria obtenida exitosamente',
             'data' =>new CategoriaResource($categoria)
         ], Response::HTTP_OK);
 

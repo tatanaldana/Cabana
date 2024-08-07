@@ -33,9 +33,9 @@ class VentaPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user,User $model): Response
+    public function create(User $user): Response
     {
-        return $user->hasRole('admin') || $user->id === $model->id
+        return $user->hasRole('admin') || $user->hasRole('cliente')
         ? $this->allow()
         : $this->deny('No tienes permiso para realizar esta venta.');
     }

@@ -23,9 +23,9 @@ class DetventaPolicy
     /**
      * Determine whether the user can create Detventas.
      */
-    public function create(User $user,Detventa $detventa): Response
+    public function create(User $user): Response
     {
-        return $user->hasRole('admin') || $user->id === $detventa->user_id
+        return $user->hasRole('admin') || $user->hasRole('cliente')
             ? $this->allow()
             : $this->deny('No tienes permiso para crear detalles de venta.');
     }

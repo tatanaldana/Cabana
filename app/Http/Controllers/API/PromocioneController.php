@@ -47,6 +47,8 @@ class PromocioneController extends Controller
      */
     public function show(Promocione $promocione)
     {
+        $promocione = Promocione::included()->findOrFail($promocione->id);
+        
         return response()->json([
             'message' => 'Promociones obtenido exitosamente',
             'data' =>new PromocioneResource($promocione)
