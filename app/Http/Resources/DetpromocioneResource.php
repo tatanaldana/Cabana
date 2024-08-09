@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Requests\API\ProductoRequest;
+use App\Models\Producto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,6 +22,7 @@ class DetpromocioneResource extends JsonResource
             'cantidad' => $this->cantidad,
             'descuento' => $this->descuento,
             'subtotal' => $this->subtotal,
+            'producto'=>new ProductoResource($this->whenLoaded('producto')),
         ];
     }
 }

@@ -12,6 +12,7 @@ class Detventa extends Model
     use HasFactory,Apitrait,Token;
 
     protected $table='detventas';
+    
 
     protected $fillable = [
         'nom_producto',

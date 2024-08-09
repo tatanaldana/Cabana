@@ -19,14 +19,14 @@ class CategoriaPolicy
                 : $this->deny('No tienes permiso para crear esta categoría.');
         }
     
-        public function update(User $user, Categoria $categoria): Response
+        public function update(User $user): Response
         {
             return $user->hasRole('admin')
                 ? $this->allow()
                 : $this->deny('No tienes permiso para actualizar esta categoría.');
         }
     
-        public function delete(User $user, Categoria $categoria): Response
+        public function delete(User $user): Response
         {
             return $user->hasRole('admin')
                 ? $this->allow()

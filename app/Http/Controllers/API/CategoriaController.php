@@ -24,7 +24,7 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        $categorias = Categoria::all();
+        $categorias = Categoria::included()->get();
         return CategoriaResource::collection($categorias);
     }
 
@@ -33,6 +33,8 @@ class CategoriaController extends Controller
      */
     public function show(Categoria $categoria)
     {
+        $categoria = Categoria::included()->findOrFail($categoria->id);
+
         return response()->json([
             'message' => 'cataegoria obtenida exitosamente',
             'data' =>new CategoriaResource($categoria)

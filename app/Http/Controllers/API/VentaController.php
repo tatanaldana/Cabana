@@ -17,6 +17,7 @@ class VentaController extends Controller
 
         $this->middleware(['scope:admin','permission:view general'])->only('index');
         $this->middleware(['scope:admin,cliente','permission:view general|ver personal cliente'])->only('show');
+        $this->middleware(['scope:admin,cliente', 'permission:create general|registro parcial'])->only('store');
         $this->middleware(['scope:admin,cliente', 'permission:edit general|edicion parcial'])->only('update');
         $this->middleware(['scope:admin,cliente', 'permission:delete general|Eliminacion parcial'])->only('destroy');
     }
@@ -26,7 +27,7 @@ class VentaController extends Controller
     public function index()
     {
         $this->authorize('viewAny', Venta::class);
-        $venta=Venta::all();
+        $venta=Venta::included()->get();
         return VentaResource::collection($venta);
 
     }
@@ -52,6 +53,8 @@ class VentaController extends Controller
     public function show(Venta $venta)
     {
         $this->authorize('view', $venta);
+
+        $venta = Venta::included()->findOrFail($venta->id);
 
         return response()->json([
             'message' => 'Venta obtenida exitosamente',

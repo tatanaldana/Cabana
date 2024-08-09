@@ -26,7 +26,7 @@ class DetpromocioneController extends Controller
      */
     public function index()
     {
-        $detpromociones = Detpromocione::all();
+        $detpromociones = Detpromocione::included()->get();
         return DetpromocioneResource::collection($detpromociones);
     }
 
@@ -35,12 +35,8 @@ class DetpromocioneController extends Controller
      */
     public function show($id)
     {
-        $detpromociones = Detpromocione::where('promocione_id', $id)->get();
-
-        if ($detpromociones->isEmpty()) {
-            abort(404, 'Detalle de promoción no encontrado'); // Utiliza abort para manejar errores
-        }
-
+        $detpromociones = Detpromocione::included()->findOrFail($id);
+        
         return DetpromocioneResource::collection($detpromociones);
     }
 

@@ -23,9 +23,9 @@ class DetventaPolicy
     /**
      * Determine whether the user can create Detventas.
      */
-    public function create(User $user,Detventa $detventa): Response
+    public function create(User $user): Response
     {
-        return $user->hasRole('admin') || $user->id === $detventa->user_id
+        return $user->hasRole('admin') || $user->hasRole('cliente')
             ? $this->allow()
             : $this->deny('No tienes permiso para crear detalles de venta.');
     }
@@ -35,8 +35,10 @@ class DetventaPolicy
      */
     private function viewSingle(User $user, Detventa $detventa): bool
     {
+
+        $venta = $detventa->venta;
         // Aquí defines la lógica para permitir el acceso a una sola instancia
-        return $user->hasRole('admin') ||$user->id === $detventa->user_id;
+        return $user->hasRole('admin') ||$user->id === $venta->user_id;
     }
 
     /**

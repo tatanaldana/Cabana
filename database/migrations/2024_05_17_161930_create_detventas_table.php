@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('subtotal')->notNull();
             $table->timestamps();
             $table->unsignedBigInteger('venta_id')->nullable();
-            $table->foreign('venta_id')->references('id')->on('ventas')->onDelete('restrict');
+            $table->foreign('venta_id')->references('id')->on('ventas')->onDelete('cascade');
         });
     }
 
