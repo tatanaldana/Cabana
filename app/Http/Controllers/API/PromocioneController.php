@@ -23,7 +23,7 @@ class PromocioneController extends Controller
      */
     public function index()
     {
-            $data=Promocione::all();
+            $data=Promocione::included()->get();
             return PromocioneResource::collection($data);
     }
 
@@ -48,7 +48,6 @@ class PromocioneController extends Controller
     public function show(Promocione $promocione)
     {
         $promocione = Promocione::included()->findOrFail($promocione->id);
-        
         return response()->json([
             'message' => 'Promociones obtenido exitosamente',
             'data' =>new PromocioneResource($promocione)

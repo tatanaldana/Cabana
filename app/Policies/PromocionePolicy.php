@@ -18,14 +18,14 @@ class PromocionePolicy
             : $this->deny('No tienes permiso para crear un nuevo proveedor.');
     }
 
-    public function update(User $user, Promocione $promocione): Response
+    public function update(User $user): Response
     {
         return $user->hasRole('admin')
             ? $this->allow()
             : $this->deny('No tienes permiso para actualizar este proveedor.');
     }
 
-    public function delete(User $user, Promocione $promocione): Response
+    public function delete(User $user): Response
     {
         return $user->hasRole('admin')
             ? $this->allow()

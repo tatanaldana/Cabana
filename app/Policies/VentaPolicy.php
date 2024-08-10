@@ -23,11 +23,11 @@ class VentaPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, User $model,Venta $venta): Response
+    public function view(User $user,Venta $venta): Response
     {
-        return $user->hasRole('admin') || $user->id === $model->id
-        ? $this->allow()
-        : $this->deny('No tienes permiso para ver esta venta.');
+       return $user->hasRole('admin') ||$user->id == $venta->user_id
+            ? $this->allow()
+            : $this->deny('No tienes permiso para crear una venta.');
     }
 
     /**
@@ -43,9 +43,9 @@ class VentaPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, User $model,Venta $venta): Response
+    public function update(User $user, Venta $venta): Response
     {
-        return $user->hasRole('admin') || $user->id === $model->id
+        return $user->hasRole('admin') || $user->id == $venta->user_id
         ? $this->allow()
         : $this->deny('No tienes permiso para actualizar esta venta.');
     }
@@ -53,9 +53,9 @@ class VentaPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, User $model,Venta $venta): Response
+    public function delete(User $user,Venta $venta): Response
     {
-        return $user->hasRole('admin') || $user->id === $model->id
+        return $user->hasRole('admin') || $user->id == $venta->user_id
         ? $this->allow()
         : $this->deny('No tienes permiso para eliminar esta venta.');
     }

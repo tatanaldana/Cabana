@@ -21,11 +21,11 @@ class Detpromocione extends Model
         'producto_id',
     ];
 
-    public function promociones(){
+    public function promocione(){
         return $this->belongsTo(Promocione::class);
     }
     
-    public function productos(){
+    public function producto(){
         return $this->belongsTo(Producto::class);
     }
 
