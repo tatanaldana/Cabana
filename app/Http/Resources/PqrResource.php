@@ -19,9 +19,10 @@ class PqrResource extends JsonResource
             'sugenrencia' => $this->sugerencia,
             'tipo_suge' => $this->tipo_suge,
             'estado' => $this->estado,
-            'created_at'=>$this->created_at,
-            'update_at'=>$this->update_at,
-            'user_id' => $this->user_id
+            'created_at'=>$this->created_at->toDateTimeString(),
+            'update_at'=>$this->update_at->toDateTimeString(),
+            'user_id' => $this->user_id,
+            'usuario'=>new UserResource($this->whenLoaded('user')),
         ];
     }
 }

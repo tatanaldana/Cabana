@@ -63,7 +63,7 @@ class DetventaController extends Controller
     public function show($id)
     {
 
-            $detventas = Detventa::included()->where('venta_id', $id)->get();
+            $detventas = Detventa::included()->findOrFail($id);
     
             if ($detventas->isEmpty()) {
                 abort(404, 'Detalle de venta no encontrado'); 

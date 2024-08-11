@@ -22,7 +22,6 @@ class ProductoResource extends JsonResource
             'precio_producto' => $this->precio_producto,
             'detalle' => $this->detalle,
             'codigo' => $this->codigo,
-            'categoria'=>CategoriaResource::collection($this->whenLoaded('categoria'))
         ];
     }
 }

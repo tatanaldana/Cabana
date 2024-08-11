@@ -33,7 +33,7 @@ class PqrPolicy
             : $this->deny('No tienes permiso para crear una nueva PQR.');
     }
 
-    public function update(User $user, Pqr $pqr): Response
+    public function update(User $user): Response
     {
         return $user->hasRole('admin') 
             ? $this->allow()

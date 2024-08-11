@@ -23,7 +23,7 @@ class DetpromocionePolicy
     /**
      * Determine whether the user can update the Detpromocione.
      */
-    public function update(User $user, Detpromocione $detpromocione): Response
+    public function update(User $user): Response
     {
         return $user->hasRole('admin')
             ? $this->allow()

@@ -13,7 +13,7 @@ class Promocione extends Model
 
     protected $table='promociones';
 
-    protected $allowincluded=['detpromociones','detpromociones.productos'];
+    protected $allowincluded=['detpromociones','detpromociones.producto'];
 
     protected $fillable = [
         'nom_promo',
@@ -27,6 +27,12 @@ class Promocione extends Model
 
     public function categoria(){
         return $this->belongsTo(Categoria::class);
+    }
+
+    
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
     }
 
 }

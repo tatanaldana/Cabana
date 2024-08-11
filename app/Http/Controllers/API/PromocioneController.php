@@ -23,7 +23,7 @@ class PromocioneController extends Controller
      */
     public function index()
     {
-            $data=Promocione::all();
+            $data=Promocione::included()->get();
             return PromocioneResource::collection($data);
     }
 

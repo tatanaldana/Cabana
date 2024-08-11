@@ -19,10 +19,9 @@ class CategoriaResource extends JsonResource
         return [
             'id'=>$this->id,
             'nombre'=>$this->nombre_cat,
-            'fehca creada'=>$this->created_at,
-            'fecha actualizada'=>$this->updated_at,
-            'productos'=>ProductoResource::collection($this->whenLoaded('productos')),
-
+            'fehca creada'=>$this->created_at->toDateTimeString(),
+            'fecha actualizada'=>$this->updated_at->toDateTimeString(),
+            'productos'=>ProductoResource::collection($this->whenLoaded('productos'))
         ];
     }
 }

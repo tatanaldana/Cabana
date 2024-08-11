@@ -31,9 +31,9 @@ class Producto extends Model
         return $this->hasMany(Detpromocione::class);
     }
 
-    public function image()
+    public function images()
     {
-        return $this->morphOne(Image::class,'imageable');
+        return $this->morphMany(Image::class,'imageable');
     }
 
    

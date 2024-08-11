@@ -35,8 +35,10 @@ class DetventaPolicy
      */
     private function viewSingle(User $user, Detventa $detventa): bool
     {
+
+        $venta = $detventa->venta;
         // Aquí defines la lógica para permitir el acceso a una sola instancia
-        return $user->hasRole('admin') ||$user->id === $detventa->user_id;
+        return $user->hasRole('admin') ||$user->id === $venta->user_id;
     }
 
     /**

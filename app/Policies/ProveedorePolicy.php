@@ -21,7 +21,7 @@ class ProveedorePolicy
         : $this->deny('No tienes permiso para ver el listado de proveedores.');
     }
 
-    public function view(User $user, Proveedore $proveedore): Response
+    public function view(User $user): Response
     {
         return $user->hasRole('admin')
             ? $this->allow()
@@ -35,14 +35,14 @@ class ProveedorePolicy
             : $this->deny('No tienes permiso para crear una nueva materia prima.');
     }
 
-    public function update(User $user, Proveedore $proveedore): Response
+    public function update(User $user): Response
     {
         return $user->hasRole('admin')
             ? $this->allow()
             : $this->deny('No tienes permiso para actualizar esta materia prima.');
     }
 
-    public function delete(User $user, Proveedore $proveedore): Response
+    public function delete(User $user): Response
     {
         return $user->hasRole('admin')
             ? $this->allow()

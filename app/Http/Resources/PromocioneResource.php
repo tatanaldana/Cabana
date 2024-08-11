@@ -18,8 +18,8 @@ class PromocioneResource extends JsonResource
             'id'=>$this->id,
             'nom_promo'=>$this->nom_promo,
             'total_promo'=>$this->total_promo,
-            'fecha creada'=>$this->created_at,
-            'fecha actualizada'=>$this->updated_at,
+            'fecha creada'=>$this->created_at->toDateTimeString(),
+            'fecha actualizada'=>$this->updated_at->toDateTimeString(),
             'detpromociones'=>DetpromocioneResource::collection($this->whenLoaded('detpromociones')),
         ];
     }

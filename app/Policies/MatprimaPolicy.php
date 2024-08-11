@@ -20,7 +20,7 @@ class MatprimaPolicy
         : $this->deny('No tienes permiso para ver el listado de materia primas.');
     }
 
-    public function view(User $user, Matprima $matprima): Response
+    public function view(User $user): Response
     {
         return $user->hasRole('admin')
             ? $this->allow()
@@ -34,14 +34,14 @@ class MatprimaPolicy
             : $this->deny('No tienes permiso para crear una nueva materia prima.');
     }
 
-    public function update(User $user, Matprima $matprima): Response
+    public function update(User $user): Response
     {
         return $user->hasRole('admin')
             ? $this->allow()
             : $this->deny('No tienes permiso para actualizar esta materia prima.');
     }
 
-    public function delete(User $user, Matprima $matprima): Response
+    public function delete(User $user): Response
     {
         return $user->hasRole('admin')
             ? $this->allow()

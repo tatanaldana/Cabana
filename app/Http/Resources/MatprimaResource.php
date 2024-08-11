@@ -22,8 +22,8 @@ class MatprimaResource extends JsonResource
             'entrada'=>$this->entrada,
             'salida'=>$this->salida,
             'stock'=>$this->stock,
-            'created_at'=>$this->created_at,
-            'updated_at'=>$this->updated_at
+            'created_at'=>$this->created_at->toDateTimeString(),
+            'updated_at'=>$this->updated_at->toDateTimeString()
         ];
     }
 }
