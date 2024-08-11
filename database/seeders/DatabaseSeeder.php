@@ -23,11 +23,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        //Storage::deleteDirectory('image');
-        //Storage::makeDirectory('image');
 
-        $this->call(RoleSeeder::class);
-        $this->call(UserSeeder::class);
+         $this->call(RoleSeeder::class);
+         $this->call(UserSeeder::class);
          $this->call(CategoriaSeeder::class);
          $this->call(ProductoSeeder::class);
          $this->call(VentaSeeder::class);
@@ -37,6 +35,8 @@ class DatabaseSeeder extends Seeder
          $this->call(PqrSeeder::class);
          $this->call(MatprimaSeeder::class);
          $this->call(ProveedoreSeeder::class); 
+         $this->call(ImageSeeder::class); 
+
  
     /*     User::Factory(10)->create()->each(function (User $user){
             Image::factory(1)->create([

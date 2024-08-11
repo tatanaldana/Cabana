@@ -18,6 +18,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\API\Auth\RefreshTokenController;
 use App\Http\Controllers\API\DB\ProcedimientoController;
 use App\Http\Controllers\API\DB\ViewController;
+use App\Http\Controllers\API\ImageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,6 +56,30 @@ Route::apiResource('promociones',PromocioneController::class);
 Route::apiResource('proveedores',ProveedoreController::class);
 Route::apiResource('users',UserController::class);
 Route::apiResource('ventas',VentaController::class);
+
+Route::prefix('images')->group(function () {
+
+    // Obtener todas las imágenes para un modelo específico (relación uno a uno)
+    Route::get('{modelType}', [ImageController::class, 'indexAllImages']);
+
+    // Obtener todas las imágenes para un modelo específico (relación uno a uno)
+    Route::get('{modelType}/{modelId}', [ImageController::class, 'index']);
+
+    // Obtener una imagen específica de un modelo (relación uno a muchos)
+    Route::get('{modelType}/{modelId}/{imageId}', [ImageController::class, 'show']);
+
+    // Crear una nueva imagen para un modelo
+    Route::post('', [ImageController::class, 'store']);
+
+    // Actualizar o eliminar imagen para relaciones uno a uno
+    Route::put('{modelType}/{modelId}', [ImageController::class, 'updateForOneToOne']);
+    Route::delete('{modelType}/{modelId}', [ImageController::class, 'destroyImageForOneToOne']);
+
+    // Actualizar o eliminar imagen para relaciones uno a muchos
+    Route::put('{modelType}/{modelId}/{imageId}', [ImageController::class, 'updateForOneToMany']);
+    Route::delete('{modelType}/{modelId}/{imageId}', [ImageController::class, 'destroyImageForOneToMany']);
+
+});
 
 
 

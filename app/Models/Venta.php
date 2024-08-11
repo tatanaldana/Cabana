@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Token;
 use App\Traits\Apitrait;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,8 +21,25 @@ class Venta extends Model
         'metodo_pago',
         'estado',
         'total',
+        'medio_env',
         'user_id',
     ];
+
+    protected function estado(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => $value ? 'Completado' : 'En Proceso',
+            set: fn ($value) => $value === 'Completado' ? 1 : 0
+        );
+    }
+
+    protected function medioEnv(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => $value ? 'A domicilio' : 'En tienda',
+            set: fn ($value) => $value === 'A domicilio' ? 1 : 0
+        );
+    }
 
     public function user()
     {

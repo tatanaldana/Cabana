@@ -35,6 +35,16 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        // Asegúrate de manejar solo solicitudes API
+        if ($request->expectsJson()) {
+            return $this->handleApiException($exception);
+        }
+
+        return parent::render($request, $exception);
+    }
+
+    protected function handleApiException(Throwable $exception)
+    {
         if ($exception instanceof AuthenticationException) {
             return response()->json([
                 'error' => 'No autenticado. Por favor, inicie sesión.',
@@ -65,6 +75,12 @@ class Handler extends ExceptionHandler
                 'error' => 'Error de validación.',
                 'messages' => $exception->errors(),
             ], 422);
+        }
+
+        if ($exception instanceof \InvalidArgumentException) {
+            return response()->json([
+                'error' => $exception->getMessage(),
+            ], 400);
         }
 
         return response()->json([
