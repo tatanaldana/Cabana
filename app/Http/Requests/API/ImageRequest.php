@@ -31,7 +31,9 @@ class ImageRequest extends FormRequest
                     'image' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048',
                 ];
 
-            /*  case 'updateForOneToMany':
+            
+            
+                /*  }case 'updateForOneToMany':
                     return [
                         'imageable_type' => [
                             'required',

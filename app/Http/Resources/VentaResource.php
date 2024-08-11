@@ -20,7 +20,7 @@ class VentaResource extends JsonResource
             'estado'=>$this->estado,
             'total'=>$this->total,
             'created_at'=>$this->created_at->toDateTimeString(),
-            'user_id'=>$this->user_id->toDateTimeString(),
+            'user_id'=>$this->user_id,
             'detventa'=>DetventaResource::collection($this->whenLoaded('detventas')),
             'usuario'=>new UserResource($this->whenLoaded('user')),
         ];
