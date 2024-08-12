@@ -34,7 +34,6 @@ class CategoriaController extends Controller
     public function show(Categoria $categoria)
     {
         $categoria = Categoria::included()->findOrFail($categoria->id);
-     
 
         return response()->json([
             'message' => 'Categoria obtenida exitosamente',
