@@ -41,7 +41,7 @@ class VentaController extends Controller
         $data = $request->validated();
         $venta=Venta::create($data);
         return response()->json([
-            'message' => 'Categoría creada exitosamente',
+            'message' => 'Venta creada exitosamente',
             'data' => new VentaResource($venta)
         ], Response::HTTP_CREATED);
 

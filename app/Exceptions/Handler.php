@@ -6,6 +6,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
 use Throwable;
 use Illuminate\Validation\ValidationException;
 use Laravel\Passport\Exceptions\MissingScopeException;
@@ -33,60 +34,62 @@ class Handler extends ExceptionHandler
         });
     }
 
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Throwable  $exception
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     */
     public function render($request, Throwable $exception)
-    {
-        // Asegúrate de manejar solo solicitudes API
-        if ($request->expectsJson()) {
-            return $this->handleApiException($exception);
-        }
-
-        return parent::render($request, $exception);
-    }
-
-    protected function handleApiException(Throwable $exception)
     {
         if ($exception instanceof AuthenticationException) {
             return response()->json([
                 'error' => 'No autenticado. Por favor, inicie sesión.',
-            ], 401);
+            ], Response::HTTP_UNAUTHORIZED); // 401
         }
 
         if ($exception instanceof AuthorizationException) {
             return response()->json([
-                'error' => 'No autorizado. ' . $exception->getMessage(),
-            ], 403);
+                'error' => 'No autorizado. No tienes permiso para realizar esta acción.',
+                'messages' => $exception->getMessage(),
+            ], Response::HTTP_FORBIDDEN); // 403
         }
 
         if ($exception instanceof MissingScopeException) {
             return response()->json([
-                'error' => 'Alcance requerido no proporcionado. ' . $exception->getMessage(),
-            ], 403);
+                'error' => 'Alcance requerido no proporcionado. Verifica tus permisos.',
+            ], Response::HTTP_FORBIDDEN); // 403
         }
-
 
         if ($exception instanceof ModelNotFoundException) {
             return response()->json([
                 'error' => 'El recurso solicitado no se encontró.',
-            ], 404);
+            ], Response::HTTP_NOT_FOUND); // 404
         }
 
         if ($exception instanceof ValidationException) {
             return response()->json([
                 'error' => 'Error de validación.',
                 'messages' => $exception->errors(),
-            ], 422);
+            ], Response::HTTP_UNPROCESSABLE_ENTITY); // 422
         }
 
         if ($exception instanceof \InvalidArgumentException) {
             return response()->json([
-                'error' => $exception->getMessage(),
-            ], 400);
+                'error' => 'Solicitud incorrecta. Verifica los datos enviados.',
+            ], Response::HTTP_BAD_REQUEST); // 400
         }
 
-        return response()->json([
-            'error' => 'Error interno del servidor. ' . $exception->getMessage(),
-        ], 500);
+        // Manejo de otras excepciones generales
+        if ($exception instanceof \Exception) {
+            return response()->json([
+                'error' => 'Error interno del servidor.',
+                'details' => env('APP_DEBUG') ? $exception->getMessage() : 'Error interno del servidor.',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR); // 500
+        }
 
+        // Llamada al manejador de excepciones base para cualquier excepción no manejada específicamente
+        return parent::render($request, $exception);
     }
 }
-

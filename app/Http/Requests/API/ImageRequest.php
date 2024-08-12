@@ -31,34 +31,20 @@ class ImageRequest extends FormRequest
                     'image' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048',
                 ];
 
-            
-            
-                /*  }case 'updateForOneToMany':
+                case 'updateImage':
                     return [
                         'imageable_type' => [
                             'required',
                             Rule::in(['productos', 'categorias', 'promociones', 'users']),
                         ],
-                        'id' => [
+                        'imageable_id' => [
                             'required',
                             'integer',
                         ],
                         'image' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048',
                     ];
-
-                case 'updateForOneToOne':
-                    return [
-                        'imageable_type' => [
-                            'required',
-                            Rule::in(['productos', 'categorias', 'promociones', 'users']),
-                        ],
-                        'image' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048',
-                    ];*/
-
                 default:
-                    return [
-                       // 'image' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048',
-                    ];
+                    return [ ];
         }
     }
 

@@ -59,25 +59,17 @@ Route::apiResource('ventas',VentaController::class);
 
 Route::prefix('images')->group(function () {
 
-    // Obtener todas las imágenes para un modelo específico (relación uno a uno)
-    Route::get('{modelType}', [ImageController::class, 'indexAllImages']);
-
-    // Obtener todas las imágenes para un modelo específico (relación uno a uno)
-    Route::get('{modelType}/{modelId}', [ImageController::class, 'index']);
+    Route::get('{modelType}',[ImageController::class, 'index']);
 
     // Obtener una imagen específica de un modelo (relación uno a muchos)
-    Route::get('{modelType}/{modelId}/{imageId}', [ImageController::class, 'show']);
+    Route::get('{modelType}/{modelId}/{imageId?}', [ImageController::class, 'show']);
 
     // Crear una nueva imagen para un modelo
     Route::post('', [ImageController::class, 'store']);
 
-    // Actualizar o eliminar imagen para relaciones uno a uno
-    Route::put('{modelType}/{modelId}', [ImageController::class, 'updateForOneToOne']);
-    Route::delete('{modelType}/{modelId}', [ImageController::class, 'destroyImageForOneToOne']);
+    Route::post('{image}', [ImageController::class, 'updateImage']);
 
-    // Actualizar o eliminar imagen para relaciones uno a muchos
-    Route::put('{modelType}/{modelId}/{imageId}', [ImageController::class, 'updateForOneToMany']);
-    Route::delete('{modelType}/{modelId}/{imageId}', [ImageController::class, 'destroyImageForOneToMany']);
+    Route::delete('{modelType}/{modelId}/{imageId}', [ImageController::class, 'destroyImage']);
 
 });
 
