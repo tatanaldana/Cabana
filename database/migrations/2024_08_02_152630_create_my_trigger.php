@@ -33,23 +33,25 @@ return new class extends Migration
         ');
 
         DB::unprepared('
-        CREATE TRIGGER before_delete_ventas
-        BEFORE DELETE ON ventas
-        FOR EACH ROW
-        BEGIN
+            CREATE TRIGGER before_delete_ventas
+            BEFORE DELETE ON ventas
+            FOR EACH ROW
+            BEGIN
+                DECLARE cancelation_id BIGINT;
 
-            INSERT INTO cancelation_details (cancelation_id, nom_producto, pre_producto, cantidad, subtotal)
-            SELECT OLD.id, dv.nom_producto, dv.pre_producto, dv.cantidad, dv.subtotal
-            FROM detventas dv
-            WHERE dv.venta_id = OLD.id;
+                -- Inserta en cancelation_audit_logs
+                INSERT INTO cancelation_audit_logs (venta_id, user_id, canceled_at, reason)
+                VALUES (OLD.id, OLD.user_id, NOW(), "Venta cancelada antes del pago");
 
-            -- Insertar en la tabla de auditoría
-            INSERT INTO cancelation_audit_logs (venta_id, user_id, canceled_at, reason)
-            VALUES (OLD.id, OLD.user_id, NOW(), "Venta cancelada antes del pago");
+                -- Obtén el ID del registro insertado en cancelation_audit_logs
+                SET cancelation_id = LAST_INSERT_ID();
 
-            -- Insertar detalles en la tabla de detalles de cancelación
-
-        END
+                -- Inserta detalles en cancelation_details
+                INSERT INTO cancelation_details (cancelation_id, nom_producto, pre_producto, cantidad, subtotal)
+                SELECT cancelation_id, nom_producto, pre_producto, cantidad, subtotal
+                FROM detventas
+                WHERE venta_id = OLD.id;
+            END;
         ');
     }
 

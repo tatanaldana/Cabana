@@ -32,7 +32,7 @@ class VentaRequest extends FormRequest
 
             case 'update':
                 return [
-                    'estado' => 'required|boolean',
+                    'estado' => 'required|string|in:Completado',
                 ];
 
             default:
