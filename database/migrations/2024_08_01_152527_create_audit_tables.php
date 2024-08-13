@@ -30,13 +30,12 @@ return new class extends Migration
             $table->timestamp('canceled_at');
             $table->text('reason')->nullable(); 
 
-            $table->foreign('venta_id')->references('id')->on('ventas')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
         });
 
         Schema::create('cancelation_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('cancelation_id');
+            $table->unsignedBigInteger('cancelation_id')->nullable();
             $table->string('nom_producto', 50);
             $table->integer('pre_producto');
             $table->integer('cantidad');
@@ -56,7 +55,6 @@ return new class extends Migration
         });
 
         Schema::table('cancelation_audit_logs', function (Blueprint $table) {
-            $table->dropForeign(['venta_id']);
             $table->dropForeign(['user_id']);
         });
 
