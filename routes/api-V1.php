@@ -19,6 +19,7 @@ use App\Http\Controllers\API\Auth\RefreshTokenController;
 use App\Http\Controllers\API\DB\ProcedimientoController;
 use App\Http\Controllers\API\DB\ViewController;
 use App\Http\Controllers\API\ImageController;
+use App\Http\Controllers\API\PDFController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -74,12 +75,4 @@ Route::prefix('images')->group(function () {
 });
 
 
-
-/*
-Route::prefix('categoria')->group(function(){
-    Route::get('/', [CategoriaController::class, 'index']);
-    Route::post('/buscar', [CategoriaController::class, 'store']);
-    Route::get('/{id}',[CategoriaController::class,'show']);
-    Route::put('/{id}',[CategoriaController::class,'update']);
-    Route::delete('/{id}',[CategoriaController::class,'destroy']);
-});*/
+Route::post('pdf/comprobante', [PDFController::class, 'generatePdf']);

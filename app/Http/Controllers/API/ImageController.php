@@ -39,6 +39,7 @@ class ImageController extends Controller
         }
 
         return response()->json([
+            'message' => 'Imagenes obtenidas exitosamente',
             'data' => ImageResource::collection($images)
         ], Response::HTTP_OK);
     }
