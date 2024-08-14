@@ -22,13 +22,12 @@ class UserController extends Controller
 
     }
 
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $this->authorize('viewAny', User::class);
+        //$this->authorize('viewAny', User::class);
 
         $users = User::all();
 
@@ -57,7 +56,7 @@ class UserController extends Controller
     public function show(User $user)
     {   
         $this->authorize('view', $user);
-
+        $user= User::included()->findOrFail($user->id);
         return response()->json([
             'message' => 'Usuario obtenido exitosamente',
             'user' => new UserResource($user)

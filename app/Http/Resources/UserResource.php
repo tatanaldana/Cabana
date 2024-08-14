@@ -20,6 +20,7 @@ class UserResource extends JsonResource
             'email'=>$this->email,
             'tel'=>$this->tel,
             'direccion'=>$this->direccion,
+            'ventas'=>VentaResource::collection($this->whenLoaded('ventas'))
        ];
     }
 }
