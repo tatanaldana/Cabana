@@ -85,7 +85,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof \Exception) {
             return response()->json([
                 'error' => 'Error interno del servidor.',
-                'details' => env('APP_DEBUG') ? $exception->getMessage() : 'Error interno del servidor.',
+                'details' =>'Error interno del servidor. Consulte con su administrador',
             ], Response::HTTP_INTERNAL_SERVER_ERROR); // 500
         }
 
