@@ -20,7 +20,7 @@ class PqrResource extends JsonResource
             'tipo_suge' => $this->tipo_suge,
             'estado' => $this->estado,
             'created_at'=>$this->created_at->toDateTimeString(),
-            'update_at'=>$this->update_at->toDateTimeString(),
+            'updated_at'=>$this->updated_at->toDateTimeString(),
             'user_id' => $this->user_id,
             'usuario'=>new UserResource($this->whenLoaded('user')),
         ];
