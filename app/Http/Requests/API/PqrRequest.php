@@ -24,7 +24,7 @@ class PqrRequest extends FormRequest
         switch ($this->route()->getActionMethod()) {
             case 'store':
                 return [
-                    'sugenrencia' => 'required|text',
+                    'sugerencia' => 'required|text',
                     'tipo_suge' => 'required|string',
                     'estado' => 'required|string',
                     'user_id' => 'required|integer|exists:users,id'
