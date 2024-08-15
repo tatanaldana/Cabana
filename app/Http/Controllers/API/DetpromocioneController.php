@@ -75,25 +75,28 @@ class DetpromocioneController extends Controller
         $this->authorize('update', Detpromocione::class);
 
         $data = $request->all();
+        $dataDetalles=$data['detalles'];
         $existingRecords = Detpromocione::where('promocione_id', $id)->get();
         $detpromociones = [];
 
         foreach ($existingRecords as $existingRecord) {
-            $registro = collect($data)->where('id', $existingRecord->id)->first();
+            $registro = collect($dataDetalles)->where('id', $existingRecord->id)->first();
             if ($registro) {
                 $existingRecord->update([
+                    'id'=> $registro['id'],
                     'cantidad' => $registro['cantidad'],
                     'descuento' => $registro['descuento'],
                     'subtotal' => $registro['subtotal'],
                     'producto_id' => $registro['producto_id'],
                 ]);
-                $detpromociones[] = new DetpromocioneResource($existingRecord);
+               $detpromociones[] = new DetpromocioneResource($existingRecord);
             } else {
                 $existingRecord->delete();
             }
         }
 
-        foreach ($data as $registro) {
+
+        foreach ($dataDetalles as $registro) {
             $existingRecord = $existingRecords->where('id', $registro['id'])->first();
             if (!$existingRecord) {
                 $detpromocion = Detpromocione::create([

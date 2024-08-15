@@ -27,7 +27,7 @@ class PqrRequest extends FormRequest
                     'sugenrencia' => 'required|text',
                     'tipo_suge' => 'required|string',
                     'estado' => 'required|string',
-                    'user_id' => 'required|integer'
+                    'user_id' => 'required|integer|exists:users,id'
                 ];
 
             case 'update':
