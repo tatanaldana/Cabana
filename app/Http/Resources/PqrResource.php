@@ -16,7 +16,7 @@ class PqrResource extends JsonResource
     {
         return[
             'id'=>$this->id,
-            'sugenrencia' => $this->sugerencia,
+            'sugerencia' => $this->sugerencia,
             'tipo_suge' => $this->tipo_suge,
             'estado' => $this->estado,
             'created_at'=>$this->created_at->toDateTimeString(),
