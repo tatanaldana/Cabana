@@ -16,6 +16,7 @@ class VentaController extends Controller
         $this->middleware('auth:api');
 
         $this->middleware(['scope:admin','permission:view general'])->only('index');
+        $this->middleware(['scope:admin','permission:view general'])->only(['ventaProceso', 'ventaCompletado']);
         $this->middleware(['scope:admin,cliente','permission:view general|ver personal cliente'])->only('show');
         $this->middleware(['scope:admin,cliente', 'permission:create general|registro parcial'])->only('store');
         $this->middleware(['scope:admin,cliente', 'permission:edit general|edicion parcial'])->only('update');
@@ -59,6 +60,32 @@ class VentaController extends Controller
         return response()->json([
             'message' => 'Venta obtenida exitosamente',
             'data' =>new VentaResource($venta)
+        ], Response::HTTP_OK);
+        
+    }
+
+    public function ventaProceso(Venta $venta)
+    {
+        $this->authorize('viewVentas', $venta);
+
+        $venta = Venta::where('estado', 0)->get();
+
+        return response()->json([
+            'message' => 'Venta obtenida exitosamente',
+            'data' => VentaResource::collection($venta)
+        ], Response::HTTP_OK);
+        
+    }
+
+    public function ventaCompletado(Venta $venta)
+    {
+        $this->authorize('viewVentas', $venta);
+
+        $venta = Venta::where('estado', 1)->get();
+
+        return response()->json([
+            'message' => 'Venta obtenida exitosamente',
+            'data' =>VentaResource::collection($venta)
         ], Response::HTTP_OK);
         
     }

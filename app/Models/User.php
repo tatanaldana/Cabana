@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Traits\Apitrait;
 use App\Traits\Token;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -88,4 +89,10 @@ class User extends Authenticatable
             return Hash::check($password, $this->password);
         }
 
+        protected function name(): Attribute
+        {
+            return new Attribute(
+                set: fn($value) => ucwords(strtolower($value))
+            );
+        }
 }

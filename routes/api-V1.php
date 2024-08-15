@@ -76,3 +76,6 @@ Route::prefix('images')->group(function () {
 
 
 Route::post('pdf/comprobante', [PDFController::class, 'generatePdf']);
+
+Route::get('/ventaProceso', [VentaController::class, 'ventaProceso']);
+Route::get('/ventaCompletado', [VentaController::class, 'ventaCompletado']);

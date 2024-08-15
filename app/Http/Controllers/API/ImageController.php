@@ -8,9 +8,12 @@ use App\Http\Resources\ImageResource;
 use App\Models\Image;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ImageHandlingTrait;
 
 class ImageController extends Controller
 {
+    use ImageHandlingTrait;
+    
     public function __construct()
     {
         //$this->middleware('auth:api')->except(['index', 'show']);
@@ -77,23 +80,23 @@ class ImageController extends Controller
      */
     public function store(ImageRequest $request)
     {
-        //$this->authorize('create', Image::class);
         $data = $request->validated();
-
         $model = $this->resolveModel($data['imageable_type'], $data['imageable_id']);
         
         if (method_exists($model, 'image')) {
             $existingImage = $model->image;
             if ($existingImage) {
                 return response()->json([
-                    'message' => 'Ya hay una imagen asiganada, por favor actualicela o eliminela'
+                    'message' => 'Ya hay una imagen asignada, por favor actualícela o elimínela'
                 ], Response::HTTP_BAD_REQUEST);
             }
         }
 
         $modelTypeFolder = strtolower(class_basename($data['imageable_type']));
-
-        $path = $request->file('image')->store("images/{$modelTypeFolder}", 'public');
+        $imageFile = $request->file('image');
+        $imageInstance = $this->resizeImageIfNeeded($imageFile, $data['imageable_type']);
+        $path = 'images/' . $modelTypeFolder . '/' . time() . '.' . $imageFile->getClientOriginalExtension();
+        Storage::disk('public')->put($path, (string) $imageInstance->encode());
 
         if (method_exists($model, 'images')) {
             $image = $model->images()->create([
@@ -104,25 +107,23 @@ class ImageController extends Controller
                 'path' => $path,
             ]);
         }
+
         return response()->json([
             'message' => 'Imagen creada exitosamente',
             'data' => new ImageResource($image)
         ], Response::HTTP_CREATED);
     }
+
     /**
      * Update the specified image (one-to-many).
      */
     public function updateImage(ImageRequest $request, Image $image)
     {
         $data = $request->validated();
-
-        $modelTypeFolder = strtolower(class_basename($data['imageable_type']));
-        $path = $request->file('image')->store("images/{$modelTypeFolder}", 'public');
-        
         $model = $this->resolveModel($data['imageable_type'], $data['imageable_id']);
 
         if (method_exists($model, 'images')) {
-            $existingImage =$model->images()->findOrFail($image->id);
+            $existingImage = $model->images()->findOrFail($image->id);
         } elseif (method_exists($model, 'image')) {
             $existingImage = $model->image;
         } else {
@@ -132,8 +133,12 @@ class ImageController extends Controller
         }
 
         if ($existingImage) {
-
             $this->deleteImageFile($existingImage);
+
+            $imageFile = $request->file('image');
+            $imageInstance = $this->resizeImageIfNeeded($imageFile, $data['imageable_type']);
+            $path = 'images/' . strtolower(class_basename($data['imageable_type'])) . '/' . time() . '.' . $imageFile->getClientOriginalExtension();
+            Storage::disk('public')->put($path, (string) $imageInstance->encode());
 
             $existingImage->update(['path' => $path]);
             
@@ -182,75 +187,5 @@ class ImageController extends Controller
             'message' => 'Imagen no encontrada'
         ], Response::HTTP_NOT_FOUND);
     }
-    
-    
-    /**
-     * Resolve the model instance based on type and ID.
-     */
-    private function resolveModel(string $modelType, int $modelId)
-    {
-        $modelClasses = [
-            'productos' => \App\Models\Producto::class,
-            'categorias' => \App\Models\Categoria::class,
-            'promociones' => \App\Models\Promocione::class,
-            'users' => \App\Models\User::class,
-        ];
 
-        if (!array_key_exists($modelType, $modelClasses)) {
-            throw new \InvalidArgumentException('Tipo de modelo no válido');
-        }
-
-        return $modelClasses[$modelType]::findOrFail($modelId);
-    }
-
-    /**
-     * Resolve the model class based on type.
-     */
-    private function resolveModelClass(string $modelType)
-    {
-        $modelClasses = [
-            'productos' => \App\Models\Producto::class,
-            'categorias' => \App\Models\Categoria::class,
-            'promociones' => \App\Models\Promocione::class,
-            'users' => \App\Models\User::class,
-        ];
-
-        if (!array_key_exists($modelType, $modelClasses)) {
-            throw new \InvalidArgumentException('Tipo de modelo no válido');
-        }
-
-        return $modelClasses[$modelType];
-    }
-
-    /**
-     * Delete the image and handle storage.
-     */
-    private function deleteImageFile(Image $image): void
-    {
-        $path = $image->path;
-    
-        if (Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->delete($path);
-        }
-    }
-
-
-    private function deleteImage(Image $image): void
-    {
-        $this->deleteImageFile($image);
-
-        $image->delete();
-    }
-
-    
-    public function getImageUrl(Image $image)
-    {
-        $url = Storage::url($image->path); // Obtén la URL completa para mostrar
-        
-        return response()->json([
-            'url' => $url
-        ], Response::HTTP_OK);
-    }
-
-    
 }

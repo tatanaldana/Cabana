@@ -27,7 +27,7 @@ class VentaPolicy
     {
        return $user->hasRole('admin') ||$user->id == $venta->user_id
             ? $this->allow()
-            : $this->deny('No tienes permiso para crear una venta.');
+            : $this->deny('No tienes permiso para ver esta venta.');
     }
 
     /**
@@ -58,6 +58,13 @@ class VentaPolicy
         return $user->hasRole('admin') || $user->id == $venta->user_id
         ? $this->allow()
         : $this->deny('No tienes permiso para eliminar esta venta.');
+    }
+
+    public function viewVentas(User $user): Response
+    {
+       return $user->hasRole('admin')
+            ? $this->allow()
+            : $this->deny('No tienes permiso para usar esta funcion de venta.');
     }
 
 
