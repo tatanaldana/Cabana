@@ -33,7 +33,7 @@ class PqrRequest extends FormRequest
             case 'update':
                 return [
                     'estado' => 'required|string',
-                    'id'=>'required|integer|exists:pqrs,id'
+                   // 'id'=>'required|integer|exists:pqrs,id'
                 ];
 
             default:
