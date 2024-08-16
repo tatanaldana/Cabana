@@ -9,6 +9,7 @@ use App\Models\Image;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\ImageHandlingTrait;
+use Illuminate\Support\Str;
 
 class ImageController extends Controller
 {
@@ -95,7 +96,8 @@ class ImageController extends Controller
         $modelTypeFolder = strtolower(class_basename($data['imageable_type']));
         $imageFile = $request->file('image');
         $imageInstance = $this->resizeImageIfNeeded($imageFile, $data['imageable_type']);
-        $path = 'images/' . $modelTypeFolder . '/' . time() . '.' . $imageFile->getClientOriginalExtension();
+        $uuid = (string) Str::uuid();
+        $path = 'images/' . $modelTypeFolder . '/' . $uuid . '.' . $imageFile->getClientOriginalExtension();
         Storage::disk('public')->put($path, (string) $imageInstance->encode());
 
         if (method_exists($model, 'images')) {
@@ -137,7 +139,9 @@ class ImageController extends Controller
 
             $imageFile = $request->file('image');
             $imageInstance = $this->resizeImageIfNeeded($imageFile, $data['imageable_type']);
-            $path = 'images/' . strtolower(class_basename($data['imageable_type'])) . '/' . time() . '.' . $imageFile->getClientOriginalExtension();
+            $modelTypeFolder = strtolower(class_basename($data['imageable_type']));
+            $uuid = (string) Str::uuid();
+            $path = 'images/' . $modelTypeFolder . '/' . $uuid . '.' . $imageFile->getClientOriginalExtension();
             Storage::disk('public')->put($path, (string) $imageInstance->encode());
 
             $existingImage->update(['path' => $path]);
