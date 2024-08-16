@@ -75,30 +75,37 @@ class DetpromocioneController extends Controller
         $this->authorize('update', Detpromocione::class);
 
         $data = $request->all();
-        $dataDetalles=$data['detalles'];
+        $dataDetalles = $data['detalles'];
+
+        // Obtener los registros existentes para la promoción
         $existingRecords = Detpromocione::where('promocione_id', $id)->get();
+        $existingIds = $existingRecords->pluck('id')->toArray(); // IDs de los registros existentes
+
         $detpromociones = [];
 
+        // Actualizar o eliminar los registros existentes
         foreach ($existingRecords as $existingRecord) {
             $registro = collect($dataDetalles)->where('id', $existingRecord->id)->first();
             if ($registro) {
+                // Actualizar registro existente
                 $existingRecord->update([
-                    'id'=> $registro['id'],
                     'cantidad' => $registro['cantidad'],
                     'descuento' => $registro['descuento'],
                     'subtotal' => $registro['subtotal'],
                     'producto_id' => $registro['producto_id'],
                 ]);
-               $detpromociones[] = new DetpromocioneResource($existingRecord);
+                $detpromociones[] = new DetpromocioneResource($existingRecord);
             } else {
+                // Eliminar registro si no está en la lista actualizada
                 $existingRecord->delete();
             }
         }
 
-
+        // Agregar nuevos registros
         foreach ($dataDetalles as $registro) {
-            $existingRecord = $existingRecords->where('id', $registro['id'])->first();
-            if (!$existingRecord) {
+            // Verificar si el registro ya existe en la base de datos
+            if (is_null($registro['id']) || !in_array($registro['id'], $existingIds)) {
+                // Crear nuevo registro
                 $detpromocion = Detpromocione::create([
                     'cantidad' => $registro['cantidad'],
                     'descuento' => $registro['descuento'],
@@ -112,8 +119,9 @@ class DetpromocioneController extends Controller
 
         return response()->json([
             'message' => 'Actualización exitosa',
-            'data' =>$detpromociones,
+            'data' => $detpromociones,
         ], Response::HTTP_OK);
     }
+
 
 }

@@ -33,7 +33,7 @@ class DetpromocioneRequest extends FormRequest
 
             case 'update':
                 return [
-                    'detalles.*.id' => 'required|integer|exists:detpromociones,id',
+                    'detalles.*.id' => 'nullable|integer|exists:detpromociones,id',
                     'detalles.*.cantidad' => 'required|integer',
                     'detalles.*.descuento' => 'required|integer',
                     'detalles.*.subtotal' => 'required|integer',
