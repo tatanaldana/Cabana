@@ -67,6 +67,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'scopes'=>CheckScopes::class,
         'scope'=>CheckForAnyScope::class,
-        'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+        'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class
     ];
 }

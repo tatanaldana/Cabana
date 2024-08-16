@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Http\Resources\ImageResource;
 use App\Models\Image;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -51,6 +52,77 @@ trait ImageHandlingTrait
         }
 
         return $modelClasses[$modelType];
+    }
+    /**
+     * Maneja la visualización de imágenes para el modelo 'User'.
+     */
+    private function handleUserImages($model, $imageId)
+    {
+        // Obtener la imagen asociada al usuario
+        $existingImage = $model->image; // Asumiendo que $model->image es una instancia de Image
+
+        // Si se proporciona $imageId, verifica que coincida con la imagen del usuario
+        if ($imageId) {
+            if ($existingImage && $existingImage->id == $imageId) {
+                $this->authorize('view', $existingImage);
+                return response()->json([
+                    'message' => 'Imagen obtenida exitosamente',
+                    'data' => new ImageResource($existingImage)
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'message' => 'Imagen no encontrada',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        }
+
+        // Si no se proporciona $imageId, devuelve la imagen asociada al usuario
+        if ($existingImage) {
+            $this->authorize('view', $existingImage);
+            return response()->json([
+                'message' => 'Imagen obtenida exitosamente',
+                'data' => new ImageResource($existingImage)
+            ], Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'message' => 'Imagen no encontrada',
+        ], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * Maneja la visualización de imágenes para otros modelos.
+     */
+    private function handleGeneralImages($model, $imageId)
+    {
+        if (method_exists($model, 'images')) {
+            // Relación uno a muchos
+            if ($imageId) {
+                $existingImage = $model->images()->findOrFail($imageId);
+                return response()->json([
+                    'message' => 'Imagen obtenida exitosamente',
+                    'data' => new ImageResource($existingImage)
+                ], Response::HTTP_OK);
+            }
+            $existingImages = $model->images;
+            return response()->json([
+                'message' => 'Imagenes obtenidas exitosamente',
+                'data' => ImageResource::collection($existingImages)
+            ], Response::HTTP_OK);
+        }
+
+        if (method_exists($model, 'image')) {
+            // Relación uno a uno
+            $existingImage = $model->image;
+            return response()->json([
+                'message' => 'Imagen obtenida exitosamente',
+                'data' => new ImageResource($existingImage)
+            ], Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'message' => 'El modelo no tiene métodos de imágenes',
+        ], Response::HTTP_BAD_REQUEST);
     }
 
     /**

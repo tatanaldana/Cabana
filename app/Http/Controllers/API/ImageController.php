@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\ImageRequest;
 use App\Http\Resources\ImageResource;
 use App\Models\Image;
+use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\ImageHandlingTrait;
@@ -17,18 +18,22 @@ class ImageController extends Controller
     
     public function __construct()
     {
-        //$this->middleware('auth:api')->except(['index', 'show']);
-       // $this->middleware(['scope:admin', 'permission:create general'])->only('store');
-        //$this->middleware(['scope:admin,cliente', 'permission:edit general|edicion parcial'])->only('update');
-       // $this->middleware(['scope:admin,cliente', 'permission:delete general|Eliminacion parcial'])->only('destroy');
+        $this->middleware('auth:api')->except(['index', 'show']);
+        $this->middleware(['auth:api'])->only(['store', 'update', 'destroy']);
+        $this->middleware(['scope:admin,cliente', 'permission:create general|registro parcial'])->only('store');
+        $this->middleware(['scope:admin,cliente', 'permission:edit general|edicion parcial'])->only('update');
+        $this->middleware(['scope:admin,cliente', 'permission:delete general|Eliminacion parcial'])->only('destroy');
     }
-
     /**
      * Display a listing of the images for a specific model (one-to-many).
      */
     public function index(string $modelType)
     {
         $modelClass = $this->resolveModelClass($modelType);
+
+        if ($modelType === 'users') {
+            $this->authorize('viewAny', User::class);
+        }
 
         if (method_exists($modelClass, 'images')) {
             $models = $modelClass::with('images')->get(); 
@@ -52,28 +57,16 @@ class ImageController extends Controller
      */
     public function show(string $modelType, int $modelId, $imageId = null)
     {
+        // Resuelve el modelo basado en el tipo y el ID
         $model = $this->resolveModel($modelType, $modelId);
-    
-        if (method_exists($model, 'images')) {
-            if ($imageId) {
-                $existingImage = $model->images()->findOrFail($imageId);
-                $imageResource = new ImageResource($existingImage);
-            } else {
-                $existingImages = $model->images;
-                $imageResource = ImageResource::collection($existingImages);
-            }
-        } elseif (method_exists($model, 'image')) {
-            $existingImage = $model->image;
-            $imageResource = new ImageResource($existingImage);
-        } else {
-            return response()->json([
-                'message' => 'El modelo no tiene métodos de imágenes',
-            ], Response::HTTP_BAD_REQUEST);
+
+        // Verifica si el modelo es de tipo 'users'
+        if ($modelType === 'users') {
+            return $this->handleUserImages($model, $imageId);
         }
-        return response()->json([
-            'message' => 'Imagenes obtenidas exitosamente',
-            'data' => $imageResource
-        ], Response::HTTP_OK);
+
+        // Maneja otros modelos (productos, categorías, promociones)
+        return $this->handleGeneralImages($model, $imageId);
     }
     
     /**
@@ -83,6 +76,7 @@ class ImageController extends Controller
     {
         $data = $request->validated();
         $model = $this->resolveModel($data['imageable_type'], $data['imageable_id']);
+        $this->authorize('create', $model);
         
         if (method_exists($model, 'image')) {
             $existingImage = $model->image;
@@ -121,6 +115,7 @@ class ImageController extends Controller
      */
     public function updateImage(ImageRequest $request, Image $image)
     {
+        $this->authorize('update', $image);
         $data = $request->validated();
         $model = $this->resolveModel($data['imageable_type'], $data['imageable_id']);
 
@@ -181,7 +176,12 @@ class ImageController extends Controller
         }
     
         if (isset($image) && $image) {
+            // Autorizamos la eliminación basada en la instancia de la imagen
+            $this->authorize('delete', $image);
+            
+            // Procedemos a eliminar la imagen
             $this->deleteImage($image);
+    
             return response()->json([
                 'message' => 'Imagen eliminada con éxito'
             ], Response::HTTP_OK);
@@ -191,5 +191,4 @@ class ImageController extends Controller
             'message' => 'Imagen no encontrada'
         ], Response::HTTP_NOT_FOUND);
     }
-
 }

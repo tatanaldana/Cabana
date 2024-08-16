@@ -7,6 +7,7 @@ namespace App\Providers;
 use App\Models\Categoria;
 use App\Models\Detpromocione;
 use App\Models\Detventa;
+use App\Models\Image;
 use App\Models\Matprima;
 use App\Models\Pqr;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -19,6 +20,7 @@ use App\Models\Venta;
 use App\Policies\CategoriaPolicy;
 use App\Policies\DetpromocionePolicy;
 use App\Policies\DetventaPolicy;
+use App\Policies\ImagePolicy;
 use App\Policies\MatprimaPolicy;
 use App\Policies\PqrPolicy;
 use App\Policies\ProductoPolicy;
@@ -46,6 +48,7 @@ class AuthServiceProvider extends ServiceProvider
         Proveedore::class => ProveedorePolicy::class,
         Venta::class => VentaPolicy::class,
         User::class => UserPolicy::class,
+        Image::class=>ImagePolicy::class,
     ];
     /**
      * Register any authentication / authorization services.

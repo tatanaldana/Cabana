@@ -15,7 +15,7 @@ class PromocionePolicy
     {
         return $user->hasRole('admin')
             ? $this->allow()
-            : $this->deny('No tienes permiso para crear un nuevo proveedor.');
+            : $this->deny('No tienes permiso para crear un nuevo promocion.');
     }
 
     public function update(User $user): Response

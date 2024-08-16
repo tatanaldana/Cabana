@@ -33,9 +33,9 @@ class UserPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): Response
+    public function create(User $user, User $model): Response
     {
-        return $user->hasRole('admin')
+        return $user->hasRole('admin')|| $user->id === $model->id 
         ? $this->allow()
         : $this->deny('No tienes permiso para crear este usuario.');
     }
