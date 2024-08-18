@@ -28,7 +28,7 @@ class ImageRequest extends FormRequest
                         'required',
                         'integer',
                     ],
-                    'image' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048',
+                    'image' => 'required|file|image|mimes:jpeg,png,jpg,gif|max:3048|dimensions:min_width=200,min_height=200,max_width=2000,max_height=2000',
                 ];
 
                 case 'updateImage':
@@ -41,7 +41,7 @@ class ImageRequest extends FormRequest
                             'required',
                             'integer',
                         ],
-                        'image' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048',
+                        'image' => 'required|file|image|mimes:jpeg,png,jpg,gif|max:3048|dimensions:min_width=200,min_height=200,max_width=2000,max_height=2000',
                     ];
                 default:
                     return [ ];

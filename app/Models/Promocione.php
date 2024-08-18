@@ -18,7 +18,7 @@ class Promocione extends Model
     protected $fillable = [
         'nom_promo',
         'total_promo',
-        'categorias_id',
+        'categoria_id',
     ];
 
     public function detpromociones(){

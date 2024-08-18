@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\VentaRequest;
 use App\Http\Resources\VentaResource;
 use App\Models\Venta;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class VentaController extends Controller
@@ -27,7 +26,7 @@ class VentaController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', Venta::class);
+       $this->authorize('viewAny', Venta::class);
         $venta=Venta::included()->get();
         return VentaResource::collection($venta);
 
@@ -40,7 +39,12 @@ class VentaController extends Controller
     {
         $this->authorize('create', Venta::class);
         $data = $request->validated();
-        $venta=Venta::create($data);
+        $venta = Venta::create([
+            'metodo_pago' => $data['metodo_pago'],
+            'estado' => "En Proceso",
+            'total' => null, 
+            'user_id' => $data['user_id'],
+        ]);
         return response()->json([
             'message' => 'Venta creada exitosamente',
             'data' => new VentaResource($venta)

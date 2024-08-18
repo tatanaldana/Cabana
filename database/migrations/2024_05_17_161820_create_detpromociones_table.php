@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('detpromociones', function (Blueprint $table) {
             $table->id();
             $table->integer('cantidad')->notNull();
-            $table->integer('descuento')->notNull();
+            $table->integer('porcentaje')->nullable();
+            $table->integer('descuento')->nullable();
             $table->integer('subtotal')->notNull();
             $table->timestamps();
             $table->unsignedBigInteger('promocione_id')->nullable();

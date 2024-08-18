@@ -55,7 +55,7 @@ class MatprimaController extends Controller
         $this->authorize('view', $matprima);
         
         return response()->json([
-            'message' => 'Promociones obtenido exitosamente',
+            'message' => 'Materia prima obtenida exitosamente',
             'data' =>new MatprimaResource($matprima)
         ], Response::HTTP_OK);
 

@@ -6,13 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\DetpromocioneRequest;
 use App\Http\Resources\DetpromocioneResource;
 use App\Models\Detpromocione;
+use App\Models\Promocione;
 use Illuminate\Http\Response;
+use App\Traits\CalculoValores;
 
 class DetpromocioneController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    use CalculoValores;
+
     public function __construct()
     {
         $this->middleware('auth:api')->except(['index','show']);
@@ -46,14 +48,31 @@ class DetpromocioneController extends Controller
     public function store(DetpromocioneRequest $request)
     {
         $this->authorize('create', Detpromocione::class);
-
+    
         $data = $request->validated()['detalles'];
-        $detpromociones = [];
+        $promocionId = $data[0]['promocione_id'];
+        $totalEnviado = $request->input('total_promo'); 
+        // Validar y calcular los detalles de la promoción
+        $validationResult = $this->validarYCalcularPromociones($data,$totalEnviado);
+    
+        if (!$validationResult['success']) {
+            // Eliminar la venta si hay un error de validación
+            Promocione::where('id', $promocionId)->delete();
 
+            return response()->json([
+                'message' => $validationResult['message'],
+                'total_calculado' => $validationResult['total_calculado'] ?? null,
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+    
+        $detpromociones = [];
+    
         foreach ($data as $detalle) {
             $detpromocione = Detpromocione::create([
                 'cantidad' => $detalle['cantidad'],
-                'descuento' => $detalle['descuento'],
+                'porcentaje' => $detalle['porcentaje'],
+                'descuento' => $detalle['descuento'], // Usar el valor proporcionado
                 'subtotal' => $detalle['subtotal'],
                 'promocione_id' => $detalle['promocione_id'],
                 'producto_id' => $detalle['producto_id'],
@@ -61,11 +80,16 @@ class DetpromocioneController extends Controller
             $detpromociones[] = new DetpromocioneResource($detpromocione);
         }
 
+        Promocione::where('id', $promocionId)->update([
+            'total_promo' => $totalEnviado,
+        ]);
+    
         return response()->json([
             'message' => 'Registros creados exitosamente',
-            'data' =>$detpromociones,
+            'data' => $detpromociones,
         ], Response::HTTP_CREATED);
     }
+    
 
     /**
      * Update the specified resource in storage.
@@ -76,12 +100,22 @@ class DetpromocioneController extends Controller
 
         $data = $request->all();
         $dataDetalles = $data['detalles'];
+        $totalEnviado = $request->input('total_promo'); 
 
         // Obtener los registros existentes para la promoción
         $existingRecords = Detpromocione::where('promocione_id', $id)->get();
         $existingIds = $existingRecords->pluck('id')->toArray(); // IDs de los registros existentes
 
         $detpromociones = [];
+
+        $validationResult = $this->validarYCalcularPromociones($dataDetalles,$totalEnviado);
+
+        if (!$validationResult['success']) {
+            return response()->json([
+                'message' => $validationResult['message'],
+                'total_calculado' => $validationResult['total_calculado'] ?? null,
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         // Actualizar o eliminar los registros existentes
         foreach ($existingRecords as $existingRecord) {
@@ -90,6 +124,7 @@ class DetpromocioneController extends Controller
                 // Actualizar registro existente
                 $existingRecord->update([
                     'cantidad' => $registro['cantidad'],
+                    'porcentaje'=>$registro['porcentaje'],
                     'descuento' => $registro['descuento'],
                     'subtotal' => $registro['subtotal'],
                     'producto_id' => $registro['producto_id'],
@@ -108,6 +143,7 @@ class DetpromocioneController extends Controller
                 // Crear nuevo registro
                 $detpromocion = Detpromocione::create([
                     'cantidad' => $registro['cantidad'],
+                    'porcentaje'=>$registro['porcentaje'],
                     'descuento' => $registro['descuento'],
                     'subtotal' => $registro['subtotal'],
                     'promocione_id' => $id,
@@ -116,6 +152,10 @@ class DetpromocioneController extends Controller
                 $detpromociones[] = new DetpromocioneResource($detpromocion);
             }
         }
+
+        Promocione::where('id', $id)->update([
+            'total_promo' => $totalEnviado,
+        ]);
 
         return response()->json([
             'message' => 'Actualización exitosa',

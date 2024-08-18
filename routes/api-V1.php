@@ -58,24 +58,18 @@ Route::apiResource('proveedores',ProveedoreController::class);
 Route::apiResource('users',UserController::class);
 Route::apiResource('ventas',VentaController::class);
 
-Route::prefix('images')->group(function () {
-
-    Route::get('{modelType}',[ImageController::class, 'index']);
-
-    // Obtener una imagen específica de un modelo (relación uno a muchos)
-    Route::get('{modelType}/{modelId}/{imageId?}', [ImageController::class, 'show']);
-
-    // Crear una nueva imagen para un modelo
-    Route::post('', [ImageController::class, 'store']);
-
-    Route::post('{image}', [ImageController::class, 'updateImage']);
-
-    Route::delete('{modelType}/{modelId}/{imageId}', [ImageController::class, 'destroyImage']);
-
-});
-
-
 Route::post('pdf/comprobante', [PDFController::class, 'generatePdf']);
 
 Route::get('/ventaProceso', [VentaController::class, 'ventaProceso']);
 Route::get('/ventaCompletado', [VentaController::class, 'ventaCompletado']);
+
+Route::prefix('images')->group(function () {
+    Route::get('{modelType}',[ImageController::class, 'index']);
+    Route::get('{modelType}/{modelId}/{imageId?}', [ImageController::class, 'show']);
+    Route::post('', [ImageController::class, 'store']);
+    Route::post('{image}', [ImageController::class, 'updateImage']);
+    Route::delete('{modelType}/{modelId}/{imageId}', [ImageController::class, 'destroyImage']);
+});
+
+
+

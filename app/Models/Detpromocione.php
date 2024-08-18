@@ -19,6 +19,7 @@ class Detpromocione extends Model
         'subtotal',
         'promocione_id',
         'producto_id',
+        'porcentaje'
     ];
 
     public function promocione(){

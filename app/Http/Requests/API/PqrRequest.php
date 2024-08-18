@@ -3,6 +3,7 @@
 namespace App\Http\Requests\API;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PqrRequest extends FormRequest
 {
@@ -25,7 +26,7 @@ class PqrRequest extends FormRequest
             case 'store':
                 return [
                     'sugerencia' => 'required|text',
-                    'tipo_suge' => 'required|string',
+                    'tipo_suge' => ['required|string',Rule::in(['Quejas', 'Sugerencia', 'Reclamacion', 'Felicitacion'])],
                     'estado' => 'required|string',
                     'user_id' => 'required|integer|exists:users,id'
                 ];

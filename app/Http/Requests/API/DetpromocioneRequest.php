@@ -24,20 +24,24 @@ class DetpromocioneRequest extends FormRequest
         switch ($this->route()->getActionMethod()) {
             case 'store':
                 return [
-                    'detalles.*.cantidad' => 'required|integer',
-                    'detalles.*.descuento' => 'required|integer',
-                    'detalles.*.subtotal' => 'required|integer',
+                    'detalles.*.cantidad' => 'required|integer|min:1',
+                    'detalles.*.porcentaje' => 'required|integer|min:0|max:100',
+                    'detalles.*.descuento' => 'required|integer|min:0',
+                    'detalles.*.subtotal' => 'required|integer|min:0',
                     'detalles.*.promocione_id' => 'required|integer|exists:promociones,id',
-                    'detalles.*.producto_id' => 'required|integer|exists:productos,id'
+                    'detalles.*.producto_id' => 'required|integer|exists:productos,id',
+                    'total_promo'=>'required|integer|min:1',
                 ];
 
             case 'update':
                 return [
                     'detalles.*.id' => 'nullable|integer|exists:detpromociones,id',
-                    'detalles.*.cantidad' => 'required|integer',
-                    'detalles.*.descuento' => 'required|integer',
-                    'detalles.*.subtotal' => 'required|integer',
-                    'detalles.*.producto_id' => 'required|integer|exists:productos,id'
+                    'detalles.*.cantidad' => 'required|integer|min:1',
+                    'detalles.*.porcentaje' => 'required|integer|min:0|max:100',
+                    'detalles.*.descuento' => 'required|integer|min:0',
+                    'detalles.*.subtotal' => 'required|integer|min:0',
+                    'detalles.*.producto_id' => 'required|integer|exists:productos,id',
+                    'total_promo'=>'required|integer|min:1',
                 ];
 
             default:

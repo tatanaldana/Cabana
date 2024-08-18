@@ -34,7 +34,11 @@ class PromocioneController extends Controller
     {
             $this->authorize('create', Promocione::class);
             $data = $request->validated();
-            $promocione=Promocione::create($data);
+            $promocione=Promocione::create([
+                'nom_promo' => $data['nom_promo'],
+                'total_promo' => null,
+                'categoria_id' => $data['categoria_id'],
+            ]);
             
         return response()->json([
             'message' => 'Promoción creada exitosamente',
@@ -63,7 +67,9 @@ class PromocioneController extends Controller
             $this->authorize('update', $promocione);
             $data = $request->validated();
 
-            $promocione->update($data);
+            $promocione->update([
+                'nom_promo' => $data['nom_promo'],
+            ]);
             return response()->json([
                 'message' => 'Promocion actualizada exitosamente',
                 'data' => new PromocioneResource($promocione)

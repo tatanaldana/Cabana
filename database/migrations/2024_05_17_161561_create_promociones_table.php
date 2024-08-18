@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('promociones', function (Blueprint $table) {
             $table->id();
             $table->string('nom_promo',50);
-            $table->integer('total_promo')->notNull();
+            $table->integer('total_promo')->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('categoria_id')->nullable();
             $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('set null');

@@ -34,6 +34,11 @@ return [
     'cabaña'=>[
         'client_id'=>env('CABAÑA_CLIENT_ID'),
         'client_secret'=>env('CABAÑA_CLIENT_SECRET'),
+    ],
+
+    'Arcamovil'=>[
+        'client_id'=>env('ARCAMOVIL_CLIENT_ID'),
+        'client_secret'=>env('ARCAMOVIL_CLIENT_SECRET'),
     ]
 
 ];

@@ -25,8 +25,6 @@ class VentaRequest extends FormRequest
             case 'store':
                 return [
                     'metodo_pago' => 'required|string|max:20',
-                    'estado' => 'required|boolean',
-                    'total' => 'required|integer|not_in:0',
                     'user_id' => 'required|integer|exists:users,id',
                 ];
 

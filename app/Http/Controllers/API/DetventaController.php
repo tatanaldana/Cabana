@@ -6,11 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\DetventaRequest;
 use App\Http\Resources\DetventaResource;
 use App\Models\Detventa;
+use App\Models\Venta;
 use Illuminate\Http\Response;
+use App\Traits\CalculoValores;
 
 
 class DetventaController extends Controller
 {
+    use CalculoValores;
+    
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -37,23 +41,39 @@ class DetventaController extends Controller
         $this->authorize('create', Detventa::class);
 
         $detalles = $request->validated()['detalles'];
-    
-        $detventas = [];
+        $ventaId = $detalles[0]['venta_id'];
+        $totalEnviado = $request->input('total');
+
+        // Validar detalles y calcular el total
+        $validationResult = $this->validarTotalYDetalles($detalles, $totalEnviado);
+
+        if (!$validationResult['success']) {
+            // Eliminar la venta si hay un error de validación
+            Venta::where('id', $ventaId)->delete();
+
+            return response()->json([
+                'message' => $validationResult['message'],
+                'total_calculado' => $validationResult['total_calculado'] ?? null,
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Registrar detalles
         foreach ($detalles as $detalle) {
-            $detventa = Detventa::create([
+            Detventa::create([
                 'nom_producto' => $detalle['nom_producto'],
                 'pre_producto' => $detalle['pre_producto'],
                 'cantidad' => $detalle['cantidad'],
                 'subtotal' => $detalle['subtotal'],
-                'venta_id' => $detalle['venta_id'],
+                'venta_id' => $ventaId,
             ]);
-    
-            $detventas[] = new DetventaResource($detventa);
         }
-    
+
+        // Actualizar el total de la venta
+        Venta::where('id', $ventaId)->update(['total' => $totalEnviado]);
+
         return response()->json([
-            'message' => 'Registros creados exitosamente',
-            'data' => $detventas,
+            'message' => 'Detalles de la venta registrados exitosamente',
+            'data' => Detventa::where('venta_id', $ventaId)->get(),
         ], Response::HTTP_CREATED);
     }
 

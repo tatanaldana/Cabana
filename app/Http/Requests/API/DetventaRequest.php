@@ -23,10 +23,11 @@ class DetventaRequest extends FormRequest
     {
         return [
             'detalles.*.nom_producto'=>'required|string|max:50|exists:productos,nom_producto',
-            'detalles.*.pre_producto'=>'required|integer',
-            'detalles.*.cantidad'=>'required|integer',
-            'detalles.*.subtotal'=>'required|integer',
-            'detalles.*.venta_id'=>'required|integer|exists:ventas,id'
+            'detalles.*.pre_producto'=>'required|integer|min:1',
+            'detalles.*.cantidad' => 'required|integer|min:1', // Asegurarse de que la cantidad sea al menos 1
+            'detalles.*.subtotal' => 'required|integer|min:0', // Subtotal no puede ser negativo
+            'detalles.*.venta_id' => 'required|integer|exists:ventas,id',
+            'total' => 'required|integer|min:1', // Total debe ser mayor que 0
         ];
     }
 }

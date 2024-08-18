@@ -26,14 +26,12 @@ class PromocioneRequest extends FormRequest
              case 'store':
                  return [
                     'nom_promo'=>'required|string|max:50',
-                    'total_promo'=>'required|integer',
                     'categoria_id'=>'required|integer|exists:categorias,id'
                  ];
  
              case 'update':
                  return [
                     'nom_promo'=>'required|string|max:50',
-                    'total_promo'=>'required|integer',
                  ];
  
              default:
