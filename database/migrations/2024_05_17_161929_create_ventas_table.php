@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('metodo_pago',20);
             $table->boolean('estado')->default(false);   
             $table->integer('total')->nullable();
+            $table->string('address_ventas')->nullable();
             $table->boolean('medio_env')->default(false); 
             $table->timestamps(); 
             $table->BigInteger('user_id');

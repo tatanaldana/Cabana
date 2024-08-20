@@ -23,6 +23,7 @@ class Venta extends Model
         'total',
         'medio_env',
         'user_id',
+        'address_ventas',
     ];
 
     protected function estado(): Attribute
