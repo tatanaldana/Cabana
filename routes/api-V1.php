@@ -33,6 +33,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::post('login',[LoginController::class,'store']);
+Route::post('loginmovil',[LoginController::class,'storeMovil']);
+
 Route::post('registro',[RegistroController::class,'store']);
 Route::post('logout', [LogoutController::class, 'logout']);
 Route::post('refreshToken', [RefreshTokenController::class, 'refreshToken']);

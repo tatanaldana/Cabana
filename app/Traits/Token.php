@@ -39,6 +39,34 @@ trait Token
         }
     }
 
+    public function getAccessTokenMovil(User $user, $password)
+    {
+        $baseUrl = Config::get('app.url');
+        $endpoint = '/oauth/token';
+        $url = $baseUrl . $endpoint;
+        $scopes = $user->hasRole('admin') ? 'admin' : 'cliente';
+
+
+        $response =  Http::asForm()->post($url, [
+            'grant_type' => 'password',
+            'client_id' => config('services.Arcamovil.client_id'),
+            'client_secret' => config('services.Arcamovil.client_secret'),
+            'username' => $user->email,
+            'password' => $password,
+            'scope' => $scopes,
+        ]);
+
+        if ($response->successful()) {
+            $token = $response->object();
+            $token->scopes = $scopes;
+            return $token; // Devuelve el token de acceso exitosamente
+        } else {
+            // Captura el cuerpo de la respuesta para obtener detalles del error
+            $errorBody = $response->body();
+            throw new \Exception("La solicitud para obtener el token de acceso falló: " . $response->status() . " - " . $errorBody);
+        }
+    }
+
     protected function resolveAuthorization(User $user, string $refreshToken): array
     {
         $baseUrl = Config::get('app.url');

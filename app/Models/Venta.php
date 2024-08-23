@@ -42,6 +42,15 @@ class Venta extends Model
         );
     }
 
+    protected function address_ventas(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => $value === 'null' || $value === null ? "Entrega en punto" : $value,
+            set: fn ($value) => $value === 'null' || $value === null ? "Entrega en punto" : $value
+        );
+    }
+    
+
     public function user()
     {
         return $this->belongsTo(User::class);

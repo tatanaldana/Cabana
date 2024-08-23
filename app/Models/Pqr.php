@@ -17,8 +17,9 @@ class Pqr extends Model
     protected $allowincluded=['user'];
 
     protected $fillable = [
-        'sugerencia',
+        'hechos',
         'tipo_suge',
+        'pretensiones',
         'estado',
         'user_id',
     ];

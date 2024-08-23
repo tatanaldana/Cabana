@@ -38,7 +38,36 @@ class LoginController extends Controller
   
             ]);
         } else {
-            return response()->json(['message' => 'These credentials do not match our records'], 401);
+            return response()->json(['message' => 'Sus credenciales no coinciden con las registrdas'], 401);
+        }
+    }
+
+    public function storeMovil(LoginRequest $request)
+    {
+        $request->validated();
+
+        $user = User::where('email', $request->email)->firstOrFail();
+
+        if (Hash::check($request->password, $user->password)) {
+            
+            $user->revokeOldTokens($user);
+             // Generar el token de acceso con el scope adecuado
+             $token = $user->getAccessTokenMovil($user, $request->password);
+            // Cargar los roles del usuario
+            $user->load('roles');
+
+            // Obtener el nombre del rol asociado al usuario (si existe)
+            $roleName = $user->roles->isNotEmpty() ? $user->roles->first()->name : null;
+
+            // Devolver la respuesta con los datos del usuario y el nombre del rol
+            return response()->json([
+                'user' => new UserResource($user),
+                'token' =>new TokenResource($token),
+                'role' => $roleName,
+  
+            ]);
+        } else {
+            return response()->json(['message' => 'Sus credenciales no coinciden con las registrdas'], 401);
         }
     }
 }

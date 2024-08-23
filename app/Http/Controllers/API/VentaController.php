@@ -42,7 +42,7 @@ class VentaController extends Controller
         $venta = Venta::create([
             'metodo_pago' => $data['metodo_pago'],
             'estado' => "En Proceso",
-            'addres_venta'=>$data['address_ventas'],
+            'address_ventas'=>$data['address_ventas'],
             'total' => null, 
             'user_id' => $data['user_id'],
         ]);

@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('pqrs', function (Blueprint $table) {
             $table->id();
-            $table->text('sugerencia');
+            $table->text('hechos');
+            $table->text('pretensiones');
             $table->string('tipo_suge',20);
             $table->string('estado',20);
             $table->timestamps();
