@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Auth\RegistroRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Response;
 use Spatie\Permission\Models\Role;
 
 class RegistroController extends Controller
@@ -21,6 +22,9 @@ class RegistroController extends Controller
         $clienteRole = Role::where('name', 'cliente')->first();
         $user->assignRole($clienteRole);
 
-        return UserResource::make($user);
+        return response()->json([
+            'message' => 'Registro creado exitosamente',
+            'data' => new UserResource($user)
+        ], Response::HTTP_CREATED);
     }
 }
