@@ -23,8 +23,7 @@ class RegistroController extends Controller
         $user->assignRole($clienteRole);
 
         return response()->json([
-            'message' => 'Registro creado exitosamente',
-            'data' => new UserResource($user)
+            'message' => 'Registro creado exitosamente'
         ], Response::HTTP_CREATED);
     }
 }
