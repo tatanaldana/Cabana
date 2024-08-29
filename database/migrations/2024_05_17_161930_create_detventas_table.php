@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::create('detventas', function (Blueprint $table) {
             $table->id();
-            $table->string('nom_producto',50)->notNull();
+            $table->string('nom_producto', 50)->notNull();
             $table->integer('pre_producto')->notNull();
             $table->integer('cantidad')->notNull();
             $table->integer('subtotal')->notNull();
+            $table->integer('descuento')->nullable(); // Descuento aplicado
+            $table->integer('porcentaje')->nullable(); // Porcentaje de descuento
+            $table->unsignedBigInteger('promocion_id')->nullable(); // ID de la promoción
             $table->timestamps();
             $table->unsignedBigInteger('venta_id')->nullable();
             $table->foreign('venta_id')->references('id')->on('ventas')->onDelete('cascade');

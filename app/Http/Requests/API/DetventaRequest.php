@@ -27,6 +27,9 @@ class DetventaRequest extends FormRequest
             'detalles.*.cantidad' => 'required|integer|min:1', // Asegurarse de que la cantidad sea al menos 1
             'detalles.*.subtotal' => 'required|integer|min:0', // Subtotal no puede ser negativo
             'detalles.*.venta_id' => 'required|integer|exists:ventas,id',
+            'detalles.*.descuento' => 'nullable|integer|min:0',
+            'detalles.*.porcentaje' => 'nullable|integer|min:0|max:100',
+            'detalles.*.promocione_id' => 'nullable|integer|exists:promociones,id',
             'total' => 'required|integer|min:1', // Total debe ser mayor que 0
         ];
     }

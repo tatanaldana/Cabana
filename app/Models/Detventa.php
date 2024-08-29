@@ -19,6 +19,9 @@ class Detventa extends Model
         'pre_producto',
         'cantidad',
         'subtotal',
+        'descuento',
+        'porcentaje',
+        'promocione_id',
         'venta_id',
     ];
 

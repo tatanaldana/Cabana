@@ -39,25 +39,25 @@ class DetventaController extends Controller
     public function store(DetventaRequest $request)
     {
         $this->authorize('create', Detventa::class);
-
+    
         $detalles = $request->validated()['detalles'];
         $ventaId = $detalles[0]['venta_id'];
         $totalEnviado = $request->input('total');
-
-        // Validar detalles y calcular el total
+    
+        // Validar los detalles y el total
         $validationResult = $this->validarTotalYDetalles($detalles, $totalEnviado);
-
+    
         if (!$validationResult['success']) {
             // Eliminar la venta si hay un error de validación
             Venta::where('id', $ventaId)->delete();
-
+    
             return response()->json([
                 'message' => $validationResult['message'],
                 'total_calculado' => $validationResult['total_calculado'] ?? null,
             ], Response::HTTP_BAD_REQUEST);
         }
-
-        // Registrar detalles
+    
+        // Registrar los detalles de la venta
         foreach ($detalles as $detalle) {
             Detventa::create([
                 'nom_producto' => $detalle['nom_producto'],
@@ -65,17 +65,21 @@ class DetventaController extends Controller
                 'cantidad' => $detalle['cantidad'],
                 'subtotal' => $detalle['subtotal'],
                 'venta_id' => $ventaId,
+                'descuento' => $detalle['descuento'] ?? null,
+                'porcentaje' => $detalle['porcentaje'] ?? null,
+                'promocione_id' => $detalle['promocione_id'] ?? null,
             ]);
         }
-
+    
         // Actualizar el total de la venta
         Venta::where('id', $ventaId)->update(['total' => $totalEnviado]);
-
+    
         return response()->json([
             'message' => 'Detalles de la venta registrados exitosamente',
             'data' => Detventa::where('venta_id', $ventaId)->get(),
         ], Response::HTTP_CREATED);
     }
+    
 
     /**
      * Display the specified resource.
