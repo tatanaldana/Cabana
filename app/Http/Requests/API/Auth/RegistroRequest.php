@@ -30,7 +30,7 @@ class RegistroRequest extends FormRequest
             'genero'=>'required|string|max:50',
             'direccion'=>'required|string|max:50',
             'email'=>'required|email|unique:users,email|max:50',
-            'password'=>'required|string|min:8|max:50|confirmed',
+            'password'=>'required|string|min:8|max:50|regex:/[0-9]/|regex:/[a-zA-Z]/|confirmed',
         ];
     }
 }

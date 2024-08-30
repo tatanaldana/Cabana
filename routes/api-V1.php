@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Auth\ChangePasswordController;
+use App\Http\Controllers\API\Auth\ConfirmationControlller;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\LogoutController;
 use App\Http\Controllers\API\Auth\RegistroController;
@@ -72,6 +73,14 @@ Route::prefix('images')->group(function () {
     Route::post('{image}', [ImageController::class, 'updateImage']);
     Route::delete('{modelType}/{modelId}/{imageId}', [ImageController::class, 'destroyImage']);
 });
+
+
+// Ruta para confirmar el correo electrónico
+Route::get('confirm-email/{token}', [ConfirmationControlller::class, 'confirmEmail']);
+// Ruta para solicitar el restablecimiento de contraseña
+Route::post('password-reset-request', [RegistroController::class, 'requestPasswordReset']);
+// Ruta para restablecer la contraseña
+Route::post('password-reset', [ConfirmationControlller::class, 'resetPassword']);
 
 
 

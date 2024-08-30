@@ -9,55 +9,36 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ConfirmationEmail extends Mailable
+class PasswordResetEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $user;
     public $token;
-    /**
-     * Create a new message instance.
-     */
+
     public function __construct($user, $token)
     {
         $this->user = $user;
         $this->token = $token;
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
-            from:new Address('jbojhonatan@gmail.com','Gerente Cabaña'),
-            subject: 'Confirmacion de registro',
+            from: new Address("notifications@arcasoftware.com", "APICabaña"),
+            subject: 'Restablecimiento de Contraseña',
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
-            view: 'emails.cabaña',
+            view: 'emails.password_reset', // Vista para el restablecimiento de contraseña
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
     public function attachments(): array
     {
         return [];
     }
-
-    // public function build()
-    // {
-    //     return $this->subject('Confirma su registro')
-    //                 ->view('emails.confirmation');
-    // }
 }
