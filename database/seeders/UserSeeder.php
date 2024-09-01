@@ -28,6 +28,7 @@ class UserSeeder extends Seeder
                 'fecha_naci'=>'1993-05-23',
                 'genero'=>'Masculino',
                 'direccion'=>'CL 76A 82 40',
+                'email_verified_at'=>now()
 
             ])->assignRole('admin');
     

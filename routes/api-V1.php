@@ -62,6 +62,7 @@ Route::apiResource('users',UserController::class);
 Route::apiResource('ventas',VentaController::class);
 
 Route::post('pdf/comprobante', [PDFController::class, 'generatePdf']);
+Route::post('pdf/constancia', [PDFController::class, 'generatePdf2']);
 
 Route::get('/ventaProceso', [VentaController::class, 'ventaProceso']);
 Route::get('/ventaCompletado', [VentaController::class, 'ventaCompletado']);

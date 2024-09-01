@@ -24,7 +24,7 @@ class RegistroRequest extends FormRequest
         return [
             'id'=>'required|integer|unique:users,id',
             'name'=> 'required|string|max:50',
-            'tipo_doc'=>'required|string|max:10',
+            'tipo_doc'=>'required|string|max:25',
             'tel'=>'required|string|max:11',
             'fecha_naci'=>'required|date',
             'genero'=>'required|string|max:50',

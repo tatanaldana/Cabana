@@ -16,14 +16,18 @@ class LoginController extends Controller
     public function store(LoginRequest $request)
     {
         $request->validated();
-
+        
         $user = User::where('email', $request->email)->firstOrFail();
+        
+        if (is_null($user->email_verified_at)) {
+            return response()->json(['message' => 'El email no ha sido verificado.'], 403);
+        }
 
         if (Hash::check($request->password, $user->password)) {
             
             $user->revokeOldTokens($user);
              // Generar el token de acceso con el scope adecuado
-             $token = $user->getAccessToken($user, $request->password);
+            $token = $user->getAccessToken($user, $request->password);
             // Cargar los roles del usuario
             $user->load('roles');
 
@@ -38,7 +42,7 @@ class LoginController extends Controller
   
             ]);
         } else {
-            return response()->json(['message' => 'Sus credenciales no coinciden con las registrdas'], 401);
+            return response()->json(['message' => 'Sus credenciales no coinciden con las registradas'], 401);
         }
     }
 
@@ -48,11 +52,15 @@ class LoginController extends Controller
 
         $user = User::where('email', $request->email)->firstOrFail();
 
+        if (is_null($user->email_verified_at)) {
+            return response()->json(['message' => 'El email no ha sido verificado.'], 403);
+        }
+
         if (Hash::check($request->password, $user->password)) {
             
             $user->revokeOldTokens($user);
              // Generar el token de acceso con el scope adecuado
-             $token = $user->getAccessTokenMovil($user, $request->password);
+            $token = $user->getAccessTokenMovil($user, $request->password);
             // Cargar los roles del usuario
             $user->load('roles');
 
@@ -67,7 +75,7 @@ class LoginController extends Controller
   
             ]);
         } else {
-            return response()->json(['message' => 'Sus credenciales no coinciden con las registrdas'], 401);
+            return response()->json(['message' => 'Sus credenciales no coinciden con las registradas'], 401);
         }
     }
 }

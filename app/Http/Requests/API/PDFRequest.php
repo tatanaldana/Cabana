@@ -21,8 +21,19 @@ class PDFRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'id' => 'required|integer|exists:ventas,id',
-        ];
+        switch ($this->route()->getActionMethod()) {
+            case 'generatePdf':
+                return [
+                    'id' => 'required|integer|exists:ventas,id',
+                ];  
+
+            case 'generatePdf2':
+                return [
+                    'id' => 'required|integer|exists:pqrs,id',
+                ];  
+
+            default:
+                return [];
+        }
     }
 }
