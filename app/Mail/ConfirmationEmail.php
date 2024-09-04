@@ -30,7 +30,7 @@ class ConfirmationEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address( "notifications@arcasoftware.com","APICabaña"),
+            from: new Address( "notifications@arcasoftware.com", "APICabaña" ),
             subject: 'Confirmacion de registro',
         );
     }

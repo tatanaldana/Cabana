@@ -11,9 +11,9 @@ use Intervention\Image\ImageManager;
 trait ImageHandlingTrait
 {
     private $modelDimensions = [
-        'productos' => ['width' => 400, 'height' => 200],
-        'categorias' => ['width' => 400, 'height' => 200],
-        'promociones' => ['width' => 400, 'height' => 200],
+        'productos' => ['width' => 600, 'height' => 400],
+        'categorias' => ['width' => 600, 'height' => 400],
+        'promociones' => ['width' => 600, 'height' => 400],
         'users' => ['width' => 300, 'height' => 300],
     ];
     /**
