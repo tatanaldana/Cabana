@@ -20,6 +20,7 @@ class DetpromocioneResource extends JsonResource
             'id'=> $this->id,
             'promocione_id' => $this->promocione_id,
             'cantidad' => $this->cantidad,
+            'porcentaje' => $this->porcentaje,
             'descuento' => $this->descuento,
             'subtotal' => $this->subtotal,
             'producto'=>new ProductoResource($this->whenLoaded('producto')),

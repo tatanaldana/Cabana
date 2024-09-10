@@ -51,9 +51,9 @@ class DetpromocioneSeeder extends Seeder
 
         $detpromocion=New Detpromocione();
         $detpromocion->cantidad=3;
-        $detpromocion->porcentaje=18;
-        $detpromocion->descuento=4000;
-        $detpromocion->subtotal=20000;
+        $detpromocion->porcentaje=20;
+        $detpromocion->descuento=4800;
+        $detpromocion->subtotal=19200;
         $detpromocion->promocione_id='3';
         $detpromocion->producto_id='3';
         $detpromocion->save();
@@ -61,17 +61,17 @@ class DetpromocioneSeeder extends Seeder
         $detpromocion=New Detpromocione();
         $detpromocion->cantidad=1;
         $detpromocion->porcentaje=18;
-        $detpromocion->descuento=2000;
-        $detpromocion->subtotal=10000;
+        $detpromocion->descuento=2160;
+        $detpromocion->subtotal=9840;
         $detpromocion->promocione_id='3';
         $detpromocion->producto_id='5';
         $detpromocion->save();
 
         $detpromocion=New Detpromocione();
         $detpromocion->cantidad=2;
-        $detpromocion->porcentaje=15;
-        $detpromocion->descuento=4000;
-        $detpromocion->subtotal=20000;
+        $detpromocion->porcentaje=25;
+        $detpromocion->descuento=6000;
+        $detpromocion->subtotal=18000;
         $detpromocion->promocione_id='4';
         $detpromocion->producto_id='2';
         $detpromocion->save();
@@ -79,8 +79,8 @@ class DetpromocioneSeeder extends Seeder
         $detpromocion=New Detpromocione();
         $detpromocion->cantidad=2;
         $detpromocion->porcentaje=25;
-        $detpromocion->descuento=5000;
-        $detpromocion->subtotal=15000;
+        $detpromocion->descuento=10000;
+        $detpromocion->subtotal=30000;
         $detpromocion->promocione_id='4';
         $detpromocion->producto_id='6';
         $detpromocion->save();
