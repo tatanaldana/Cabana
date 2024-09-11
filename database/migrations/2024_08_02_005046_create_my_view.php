@@ -42,6 +42,21 @@ return new class extends Migration
                 JOIN users u ON v.user_id = u.id
             GROUP BY u.id, u.name;
         ");
+
+        DB::unprepar"
+        CREATE VIEW view_promociones AS 
+        SELECT 
+            d.id, p.nom_producto AS nom_producto,
+            p.precio_producto AS pre_producto, d.cantidad,
+            d.porcentaje, d.descuento, d.subtotal,
+            pr.total_promo AS total, d.promocione_id, p.id AS producto_id 
+            FROM 
+                detpromociones d 
+                JOIN productos p ON d.producto_id = p.id 
+                JOIN promociones pr ON d.promocione_id = pr.id;
+    ");
+
+        
     }
 
     /**

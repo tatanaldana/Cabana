@@ -30,4 +30,10 @@ class ViewController extends Controller
         $resultado = DB::table('cliente_mas_ventas')->get();
         return response()->json($resultado);
     }
+
+    public function promocionesView()
+    {
+        $resultado = DB::table('view_promociones')->get();
+        return response()->json($resultado);
+    }
 }

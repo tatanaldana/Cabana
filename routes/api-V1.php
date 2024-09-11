@@ -48,6 +48,8 @@ Route::get('/contar-ventas', [ProcedimientoController::class, 'contarVentasPorMe
 Route::get('/promocion-vendidas', [ViewController::class, 'promocionMasUnidadesVendidas']);
 Route::get('/producto-mas-vendido', [ViewController::class, 'productoMasVendido']);
 Route::get('/cliente-mas-ventas', [ViewController::class, 'clienteMasVentas']);
+Route::get('/promociones_view', [ViewController::class, 'promocionesView']);
+
 
 
 Route::apiResource('categorias',CategoriaController::class);

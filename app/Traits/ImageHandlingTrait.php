@@ -12,7 +12,7 @@ trait ImageHandlingTrait
 {
     private $modelDimensions = [
         'productos' => ['width' => 600, 'height' => 400],
-        'categorias' => ['width' => 600, 'height' => 400],
+        'categorias' => ['width' => 300, 'height' => 300],
         'promociones' => ['width' => 600, 'height' => 400],
         'users' => ['width' => 300, 'height' => 300],
     ];
