@@ -25,7 +25,7 @@ class PasswordResetEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address("notifications@arcasoftware.com","APICabaña"),
+            from: new Address("notifications@arcasoftware.com", "APIcabaña"),
             subject: 'Restablecimiento de Contraseña',
         );
     }
