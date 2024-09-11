@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\CategoriaResource;
+use App\Http\Resources\DetpromocioneResource;
 
 class ProductoResource extends JsonResource
 {
@@ -23,6 +23,7 @@ class ProductoResource extends JsonResource
             'detalle' => $this->detalle,
             'codigo' => $this->codigo,
             'categoria_id' => $this->categoria_id,
+            'detpromociones'=>DetpromocioneResource::collection($this->whenLoaded('detpromociones')),
         ];
     }
 }

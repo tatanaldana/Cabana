@@ -56,7 +56,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
-        Passport::tokensExpireIn(now()->addMinutes(1));
+        Passport::tokensExpireIn(now()->addMinutes(60));
         Passport::enablePasswordGrant();
         Passport::tokensCan([
             'admin' => 'Access all resources',
